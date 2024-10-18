@@ -46,31 +46,70 @@
 				</div>
 				<div class="col-sm-4">
 					<div class="d-article">
-						<div class="d-article-title">MultiSelect</div>
+						<div class="d-article-header">MultiSelect</div>
 						<div class="d-article-section">
-							<div id="multiSelection">
+							<div id="multiSelection"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="d-article">
+						<div class="d-article-header">Text</div>
+						<div class="d-article-section">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="d-article">
+										<div class="d-article-header">Texto normal</div>
+										<div class="d-article-section">
+											<div id="text1"></div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="d-article">
+										<div class="d-article-header">TextArea</div>
+										<div class="d-article-section">
+											<div id="text2"></div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-4">
+									<div class="d-article">
+										<div class="d-article-header">NumericText</div>
+										<div class="d-article-section">
+											<div id="text3"></div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
 			<div class="row">
-				<div class="col-sm-4">
-					<!--
-					<select class="form-select" aria-label="Default select example">
-					  <option selected>Open this select menu</option>
-					  <option value="1">One</option>
-					  <option value="2">Two</option>
-					  <option value="3">Three</option>
-					</select>
-				-->
+				<div class="col-sm-12">
+					<div class="d-article">
+						<div class="d-article-header">Grid</div>
+						<div class="d-article-section">
+							<div class="content-grid">
+								<div id="grid"></div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-
 		</div>
-		
+		<style type="text/css">
+			.content-grid{
+				width: 100%;
+				overflow: hidden;
+				overflow-x: scroll;
+			}
+		</style>
 
+		<script type="text/javascript" d-role="d-editor-script" src="json/cursor.js"></script>
 		<script type="text/javascript" d-role="d-editor-script" src="js/editor_js.js"></script>
 	</body>
 
