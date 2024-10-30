@@ -21,29 +21,23 @@
 		</div>
 	</div>
 </div>
+
+
+
+
+
+
 <template id="tmp">
-<div id="boton1"></div>
-<div id="boton2"></div>
-
-<script type="text/javascript">
-	$('#boton1').divButton({
-		text:'Clickme',
-		type:'primary',
-		icon:{
-			class:'icon-close1',
-			pos:'before'
-		}
-	});
-
-	$('#boton2').divButton({
-		text:'Clickme',
-		type:'primary',
-		icon:{
-			class:'icon-close1',
-			pos:'after'
-		}
-	});
-</script>
+	<div id="checkeds"></div>
+	<script type="text/javascript">
+		$('#checkeds').divCheckBox({
+		    items:[{text:' uno'    , value:'uno'},
+		           {text:' dos'    , value:'dos'},
+		           {text:' tres'   , value:'tres'},
+		           {text:' cuatro' , value:'cuatro'}
+		          ]
+		});
+	</script>
 </template>
 <script type="text/javascript">
 	var area = document.getElementById("codigo");
@@ -75,5 +69,6 @@
 		$('#sd').toggleClass('col-sm-12');
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
+
 	});
 </script>

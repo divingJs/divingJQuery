@@ -1,12 +1,7 @@
 <div class="row">
-	<div class="col-sm-12">
-		<div id="btnConfig"></div>
-	</div>
-</div>
-<div id="cntHTML">
-	<div class="d-article">
-		<div class="d-article-section">
-			<div id="btnC"></div>
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
 		</div>
 	</div>
 </div>
@@ -14,46 +9,61 @@
 <div id="cntJS">
 	<div class="d-article">
 		<div class="d-article-section">
-<textarea type="text" id="codigo">
-<div id="boton"></div>
-
-<script type="text/javascript">
-	$('#boton').divButton({
-		text:'Clickme',
-		type:'primary',
-		click:function(){
-			alert('Hola mundo');
-		}
-	});
-</script>
-</textarea>	
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<textarea type="text" id="codigo">
+					</textarea>
+				</div>
+				<div class="col-sm-12" id="sd">
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
 		</div>
 	</div>
 </div>
-
-<script type="text/javascript">
-	
-
-		$('#btnC').divButton({
+<template id="tmp">
+	<div id="boton"></div>
+	<script type="text/javascript">
+		$('#boton').divButton({
 			text:'Clickme',
 			type:'primary',
 			click:function(){
 				alert('Hola mundo');
 			}
 		});
+	</script>
 
 
-      var editor = CodeMirror.fromTextArea(document.getElementById("codigo"), {
-        mode: myModeSpec,
-        selectionPointer: true
-      });
+</template>
+<script type="text/javascript">
+	var area = document.getElementById("codigo");
+	var b = $('#tmp')[0].innerHTML;
+	area.value=vle+b+"\n</body>\n</html>";
+	var opj={
+		value : vle+b+"\n</body>\n</html>"
+	};
+	var editor = CodeMirror.fromTextArea(area, {
+	mode: myModeSpec,
+	selectionPointer: true,
+	extraKeys: {
+		"Ctrl-Enter":function(e){
+			create('salida',opj.value);
+		}
+	}
+	});
+	editor.on('change',function(e){
+		opj.value = editor.getValue();
+	});
+	create('salida',vle+b+"\n</body>\n</html>");
 
-	$('#btnConfig').divTabsTrip({
-		content:[{title:'HTML',id:'x1', element:$('#cntHTML')},
-			{title:'JS',id:'x2',element:$('#cntJS')}]
+	$('#btnConfig').click(function(){
+		$(this).toggleClass('icon-navigate_nextchevron_right');
+		$('#menuConfig').toggleClass('d-hidden');
+		$('#salidaCofing').toggleClass('col-sm-12');
+		$('#salidaCofing').toggleClass('col-sm-8');
+		$('#en').toggleClass('col-sm-12');
+		$('#sd').toggleClass('col-sm-12');
+		$('#en').toggleClass('col-sm-6');
+		$('#sd').toggleClass('col-sm-6');
 	});
 </script>
-
-
-
-

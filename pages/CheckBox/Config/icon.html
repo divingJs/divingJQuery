@@ -21,31 +21,37 @@
 		</div>
 	</div>
 </div>
+
+
+
+
+
+
 <template id="tmp">
-<div id="boton1"></div>
-<div id="boton2"></div>
-
-<script type="text/javascript">
-	$('#boton1').divButton({
-		text:'Clickme',
-		type:'primary',
-		icon:{
-			class:'icon-close1',
-			pos:'before'
-		}
-	});
-
-	$('#boton2').divButton({
-		text:'Clickme',
-		type:'primary',
-		icon:{
-			class:'icon-close1',
-			pos:'after'
-		}
-	});
-</script>
+	<div id="checkeds"></div>
+	<script type="text/javascript">
+		
+		$('#checkeds').divCheckBox({
+		    items:[{text:' uno'    , value:'uno'},
+		           {text:' dos'    , value:'dos'},
+		           {text:' tres'   , value:'tres'},
+		           {text:' cuatro' , value:'cuatro'}
+		          ],
+		    icon:{
+		        checked:'icon-check-circle1',
+		        unchecked:'icon-panorama_fish_eyeradio_button_unchecked'
+		    }
+		});
+	</script>
 </template>
 <script type="text/javascript">
+	/*
+	,
+		    click:function(){
+		        var chk = $('#checkeds').data('divCheckBox');
+		        console.log( chk.getValue() );
+		    }
+	*/
 	var area = document.getElementById("codigo");
 	var b = $('#tmp')[0].innerHTML;
 	area.value=vle+b+"\n</body>\n</html>";
@@ -75,5 +81,6 @@
 		$('#sd').toggleClass('col-sm-12');
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
+
 	});
 </script>

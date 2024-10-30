@@ -713,6 +713,22 @@ $.extend(diving,{
                         .append(chkIcon)
                         .append(lbl)
                 );
+
+                if(v.hasOwnProperty('checked')){
+                    impt[0].checked = true;
+                    d.value.push($('#'+(i+1)+'_'+v.id)[0].value);
+                    $('#'+(i+1)+'_'+v.id).parent().toggleClass('d-chk-selected');
+                    if(d.icon.hasOwnProperty('checked')){
+                        var iconId = $('#'+(i+1)+'_icon_'+v.id);
+                        if(iconId.hasClass(d.icon.checked)){
+                            iconId.removeClass(d.icon.checked);
+                            iconId.addClass(d.icon.unchecked);
+                        }else{
+                            iconId.removeClass(d.icon.unchecked);
+                            iconId.addClass(d.icon.checked);
+                        }
+                    };
+                }
             });
         }
     };
