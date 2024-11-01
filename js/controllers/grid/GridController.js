@@ -52,9 +52,11 @@ $('#grid').divGrid({
         {field:'ID_ART'        , title:'ARTICULO',template:'<div><em class="icon-close1"></em>#:ID_ART#</div>'},
         {field:'FEC_ITI_DT'    , title:'FECHA ITINERARIO',format:'#:dd/MM/yy#'},
         {field:'SBC_CVE_N'     , title:'SBC_CVE_N',attributes:{'style':"#=SBC_CVE_N<200?'background:rgb(166,166,241)':'background:rgb(211,140,140)'#"}},
-        {field:'EQR_TA_STR'    , title:'EQR_TA_STR'},
-        {field:'FPLG_DESC_STR' , title:'FPLG_DESC_STR'},
-        {field:'DIV_CVE_N'     , title:'DIV_CVE_N'},
+        {title: 'cssdfs', columns:[{field:'EQR_TA_STR'    , title:'EQR_TA_STR'},
+                                     {field:'FPLG_DESC_STR' , title:'FPLG_DESC_STR'},
+                                     {field:'DIV_CVE_N'     , title:'DIV_CVE_N'}
+                                    ]
+        },
         {field:'COL_DESC_STR'  , title:'COL_DESC_STR'},
         {field:'CURSOR'        , title:'CURSOR'},
         {field:'CAT_CVE_N'     , title:'CAT_CVE_N',attributes:{'style':"#=CAT_CVE_N<50?'background:rgb(166,166,241)':'background:rgb(211,140,140)'#"}},

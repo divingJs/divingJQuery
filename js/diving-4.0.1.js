@@ -518,6 +518,7 @@ $.extend(diving,{
 
 
 /*Grid*/
+/*
 (function() {
     var widget = {
         name: "Grid",
@@ -628,7 +629,143 @@ $.extend(diving,{
     };
     diving.widget(widget);
 })();
-
+*/
+(function() {
+     var widget = {
+          name: "Grid",
+          columnas:[],
+          init: function(prm) {
+            //vaciarCache();
+               prm = $.extend(prm, {class: "d-grid"});
+               var widtgetData = {
+                    elem:$(this)[0],
+                    dataSource: prm.dataSource
+               };
+               widget.columnas=prm.columns;
+               widget.createElement(prm,widtgetData);
+               $(this).data('div'+widget.name, widtgetData);
+          },
+          createElement: function(p,data) {
+               $(data.elem).empty();
+               //var width=(p.width!=undefined)?'width:'+$.addPx(p.width):'';
+               var width=(p.width!=undefined)?'width:'+p.width:'';
+               var t = $('<table>',{class:'table table-striped grid-scrollable-table',style:width});
+               var th = $('<thead>',{class:'table-light'});
+               var tb = $('<tbody>',{class:''});
+               if(p.hasOwnProperty('height')){
+                    tb[0].setAttribute('style','height: '+p.height);
+               }
+               
+               t.append(th);
+               t.append(tb);
+               $(data.elem).append(t);
+               widget['thead']=th;
+               widget['tbody']=tb;
+               $.extend(data,{
+                    table:t,
+                    thead:th,
+                    tbody:tb
+               });
+               var trh = $('<tr>');
+               //var cl = document.createElement('colgroup');
+               for(var i=0;i<widget.columnas.length; i ++){
+                    var v = widget.columnas[i];
+                    if(v!=undefined){
+                        //var c = document.createElement('col');
+                        var cId='dGrid-'+'3-0-1-'+(""+Math.random()).replace(/\D/g, "");
+                        //c.setAttribute('id',cId);
+                        //cl.append(c);
+                        widget.createHeader(trh,v,cId);
+                        th.append(trh);
+                    }
+               }
+               //t.append(cl);
+               $.each(p.dataSource.options.data,function(i,v){
+                    widget.addElement(tb,v);
+               });
+          },
+          addElement:function(parent,element){
+               var tr = $('<tr>');
+               if(typeof element == 'string'){
+                    var td=$('<td>',{text:element});
+                    tr.append(td);
+               }else{
+                    if(element.hasOwnProperty('items')){
+                         var elem = $('<em>',{class:'icon-upload7'});
+                         var td=$('<td>',{colspan:widget.columnas.length,
+                                            click:function(e){
+                                                 var ts=false;
+                                                 var x = 0;
+                                                 var tshi = $(this).parent()[0];
+                                                 $.each($(widget.tbody).find('tr'),function(i,v){
+                                                      if($(v).attr('d-role')!=undefined){if(v==tshi){ts=true;x=i;}else{ts=false;}}
+                                                      if(ts&&x<i){$(v).toggleClass('d-hidden');}
+                                                 });
+                                                 $(this).find('em').toggleClass('icon-download8');
+                                                 $(this).find('em').toggleClass('icon-upload7');
+                                            }
+                                           }).append(
+                              $('<label>',{text:element.value})
+                         ).append(elem);
+                         tr.attr('d-role','d-grouppe');
+                         tr.append(td);
+                         parent.append(tr);
+                         $.map(element.items,function(e){
+                              widget.addElement(parent,e);
+                         });
+                    }else{
+                         var obj=Object.keys(element);
+                         $.each(obj,function(i,v){
+                              $.map(widget.columnas,function(e){
+                                    if(e!=undefined){
+                                        if(v==e.field){
+                                            var td = $('<td>',{
+                                                 text:element[v]
+                                            });
+                                            tr.append(td);
+                                        }
+                                    }
+                              });
+                         });
+                         parent.append(tr);
+                    }
+               }
+          },
+          createHeader:function(parent,element,colId){
+               if(!element.hasOwnProperty('columns')){
+                    var th=$('<th>',{
+                         text:element.title,
+                         col:colId,
+                         field:element.field
+                    });
+                    parent.append(th);
+                    if(element.hasOwnProperty('sortable')){
+                         if(element.sortable){
+                              var em = $('<em>',{class:'icon-sort-alpha-asc1'});
+                              th.append(em);
+                              th.click(function(){
+                                   var d=parent.parent().parent().parent();
+                                   var dg = d.data('divGrid');
+                                   var field=$(this).attr('field');
+                                   if(em.hasClass('icon-sort-alpha-asc1')){
+                                        dg.dataSource.sort({field:field});
+                                    }else{
+                                        dg.dataSource.sort({field:field,dir:'desc'});
+                                    }
+                                   widget.tbody.empty();
+                                   $.each(dg.dataSource.elements,function(i,v){
+                                        widget.addElement(widget.tbody,v);
+                                   });
+                                   em.toggleClass('icon-sort-alpha-desc1');
+                                   em.toggleClass('icon-sort-alpha-asc1')
+                              });
+                         }
+                    }
+               }
+          }
+     };
+     diving.widget(widget);
+})();
 /*
  * CheckBox
  */
