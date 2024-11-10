@@ -1077,7 +1077,7 @@ $.extend(diving,{
                 for (var i = 0; i < element.columns.length; i++) {
                     var v = element.columns[i];
                     var c = document.createElement('col');
-                    var cId = 'dGrid-' + '3-0-1-' + ("" + Math.random()).replace(/\D/g, "");
+                    var cId = 'dGrid-' + '4-0-1-' + ("" + Math.random()).replace(/\D/g, "");
                     c.setAttribute('id', cId);
                     cl.append(c);
                     widget.createHeader(trh, v, cId,th,(rdx+1));

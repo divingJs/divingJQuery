@@ -1,0 +1,73 @@
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<textarea type="text" id="codigo">
+					</textarea>
+				</div>
+				<div class="col-sm-12" id="sd">
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+<template id="tmp">
+	<div id="listView"></div>
+	<script type="text/javascript">
+		$("#listView").divListView({
+			elements:[{text:'Elemento 1'},
+					{text:'Elemento 2'},
+					{text:'Elemento 3'},
+					{text:'Elemento 4'},
+					{text:'Elemento 5'}],
+			click:function(){
+		        var d = $('#listView').data('divListView');
+		        var c = d.selected;
+		        console.log( d );
+			}
+		});
+	</script>
+</template>
+<script type="text/javascript">
+	var area = document.getElementById("codigo");
+	var b = $('#tmp')[0].innerHTML;
+	area.value=vle+b+"\n</body>\n</html>";
+	var opj={
+		value : vle+b+"\n</body>\n</html>"
+	};
+	var editor = CodeMirror.fromTextArea(area, {
+	mode: myModeSpec,
+	selectionPointer: true,
+	lineNumbers: true,
+	extraKeys: {
+		"Ctrl-Enter":function(e){
+			create('salida',opj.value);
+		}
+	}
+	});
+	editor.on('change',function(e){
+		opj.value = editor.getValue();
+	});
+	create('salida',vle+b+"\n</body>\n</html>");
+
+	$('#btnConfig').click(function(){
+		$(this).toggleClass('icon-navigate_nextchevron_right');
+		$('#menuConfig').toggleClass('d-hidden');
+		$('#salidaCofing').toggleClass('col-sm-12');
+		$('#salidaCofing').toggleClass('col-sm-8');
+		$('#en').toggleClass('col-sm-12');
+		$('#sd').toggleClass('col-sm-12');
+		$('#en').toggleClass('col-sm-6');
+		$('#sd').toggleClass('col-sm-6');
+
+	});
+</script>

@@ -28,7 +28,6 @@ $('#grid').divGrid({
         {field:'ID'            , title:'ID'},
         {field:'PRODUCTO'      , title:'PRODUCTO'},
         {field:'CATEGORIA'     , title:'CATEGORIA'},
-            //attributes:{'style':'#=CATEGORIA=="Calzado"?"text-decoration:underline":CATEGORIA=="Libros"?"text-decoration:line-through":""#'}},
         {field:'PRECIO'        , title:'PRECIO',format:"{0:u2}"},
         {field:'STOCK'         , title:'STOCK',
             attributes:{'style':"#=STOCK<20?'background:rgb(166,166,241)':'background:rgb(211,140,140)'#"}},
@@ -38,14 +37,13 @@ $('#grid').divGrid({
     ,height: '300px',
     sortable:true
 });
-var g = $('#grid').data('divGrid')
-//console.log( g );
-
-
+var g = $('#grid').data('divGrid');
 $('#config').divListView({
     elements:[
-        {text:'Creacion',href:'/pages/Grid/Config/creacion.html'},
-        {text:'Columns',href:'/pages/Grid/Config/columns.html'}
+        {text:'Configuracion',elements:[
+            {text:'Creacion',href:'/pages/Grid/Config/creacion.html'},
+            {text:'Columns',href:'/pages/Grid/Config/columns.html'}
+        ]}
     ],
     openTo:'#salidaCofig',
     class:'list-group-flush',
@@ -65,11 +63,7 @@ $('#config').divListView({
             );
         }
     }
-
 });
-
 $('#salidaCofigButton').load('/pages/Grid/Config/creacion.html');
 
 
-
-//multas 272

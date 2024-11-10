@@ -72,9 +72,13 @@ $('#btn9').divButton({
 
 $('#configButton').divListView({
     elements:[
-        {text:'Creacion',href:'/pages/Button/Config/creacion.html'},
-        {text:'Click',href:'/pages/Button/Config/click.html'},
-        {text:'Icono',href:'/pages/Button/Config/icon.html'}
+        {text:'Configuracion',elements:[
+            {text:'Creacion',href:'/pages/Button/Config/creacion.html'},
+            {text:'Icono',href:'/pages/Button/Config/icon.html'}
+        ]},
+        {text:'Eventos',elements:[
+            {text:'Click',href:'/pages/Button/Config/click.html'}
+        ]}
     ],
     openTo:'#salidaCofigButton',
     class:'list-group-flush',

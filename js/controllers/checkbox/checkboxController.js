@@ -70,12 +70,16 @@ $('#checkeds-label').divCheckBox({
 
 $('#configura').divListView({
     elements:[
-        {text:'Creacion',href:'/pages/CheckBox/Config/creacion.html'},
-        {text:'icon',href:'/pages/CheckBox/Config/icon.html'},
-        {text:'Dir',href:'/pages/CheckBox/Config/dir.html'},
-        {text:'Label',href:'/pages/CheckBox/Config/label.html'},
-        {text:'Click',href:'/pages/CheckBox/Config/click.html'},
-        {text:'Checked',href:'/pages/CheckBox/Config/checked.html'}
+        {text:'Configuracion',elements:[
+            {text:'Creacion',href:'/pages/CheckBox/Config/creacion.html'},
+            {text:'icon',href:'/pages/CheckBox/Config/icon.html'},
+            {text:'Dir',href:'/pages/CheckBox/Config/dir.html'},
+            {text:'Label',href:'/pages/CheckBox/Config/label.html'},
+            {text:'Checked',href:'/pages/CheckBox/Config/checked.html'}
+        ]},
+        {text:'Events',elements:[
+            {text:'Click',href:'/pages/CheckBox/Config/click.html'}
+        ]}
     ],
     openTo:'#salidaCofigura',
     class:'list-group-flush',
@@ -89,13 +93,12 @@ $('#configura').divListView({
         if(d.openTo!=null){
              $( d.openTo ).load(
                 (c.href.startsWith('http')?
-                c.href:
-                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + c.href
+                    c.href:
+                    (window.location.href.replace('index.html','').replace(/\#$/gm,''))+c.href
                 )
             );
         }
     }
-
 });
 
 $('#salidaCofigura').load('pages/CheckBox/Config/creacion.html');
