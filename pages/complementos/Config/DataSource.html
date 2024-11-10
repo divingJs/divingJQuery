@@ -1,0 +1,64 @@
+<!--
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+-->
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<textarea type="text" id="codigo"></textarea>
+				</div>
+				<div class="col-sm-12" id="sd"><div id="cntSalida" class="cntSalida d-hidden"></div></div>
+			</div>
+		</div>
+	</div>
+</div>
+<template id="tmp">
+	<script type="text/javascript">
+		var dataSource = new diving.data.DataSource({
+			data:[
+				    {'ID':'1','PRODUCTO':'CAMISETA DEPORTIVA',    'CATEGORIA':'ROPA',        'PRECIO':'25.00', 'STOCK':'35', 'FECHA_INGRESO':'07/15/2023'},
+				    {'ID':'2','PRODUCTO':'AUDÍFONOS INALÁMBRICOS','CATEGORIA':'ELECTRÓNICA', 'PRECIO':'49.99', 'STOCK':'20', 'FECHA_INGRESO':'06/10/2023'},
+				    {'ID':'3','PRODUCTO':'BOTELLA TÉRMICA',       'CATEGORIA':'ACCESORIOS',  'PRECIO':'15.50', 'STOCK':'50', 'FECHA_INGRESO':'05/22/2023'},
+				    {'ID':'4','PRODUCTO':'ZAPATILLAS PARA CORRER','CATEGORIA':'CALZADO',     'PRECIO':'85.00', 'STOCK':'12', 'FECHA_INGRESO':'08/01/2023'},
+				    {'ID':'5','PRODUCTO':'LIBRO DE RECETAS',      'CATEGORIA':'LIBROS',      'PRECIO':'19.99', 'STOCK':'30', 'FECHA_INGRESO':'07/05/2023'},
+				    {'ID':'6','PRODUCTO':'MOCHILA DE SENDERISMO', 'CATEGORIA':'ACCESORIOS',  'PRECIO':'55.00', 'STOCK':'18', 'FECHA_INGRESO':'06/25/2023'},
+				    {'ID':'7','PRODUCTO':'RELOJ INTELIGENTE',     'CATEGORIA':'ELECTRÓNICA', 'PRECIO':'120.00','STOCK':'8',  'FECHA_INGRESO':'08/15/2023'},
+				    {'ID':'8','PRODUCTO':'BOLÍGRAFO DE LUJO',     'CATEGORIA':'PAPELERÍA',   'PRECIO':'3.50',  'STOCK':'100','FECHA_INGRESO':'07/10/2023'},
+				    {'ID':'9','PRODUCTO':'SUDADERA CON CAPUCHA',  'CATEGORIA':'ROPA',        'PRECIO':'40.00', 'STOCK':'25', 'FECHA_INGRESO':'05/30/2023'}
+			    ]
+		});
+		console.log(dataSource)
+	</script>
+
+
+</template>
+<script type="text/javascript">
+	var area = document.getElementById("codigo");
+	var b = $('#tmp')[0].innerHTML;
+	area.value=vle2+b+"\n</body>\n</html>";
+	var opj={
+		value : vle2+b+"\n</body>\n</html>"
+	};
+	var editor = CodeMirror.fromTextArea(area, {
+	mode: myModeSpec,
+	selectionPointer: true,
+	lineNumbers: true,
+	extraKeys: {
+		"Ctrl-Enter":function(e){
+			create_2('salida',opj.value,'cntSalida');
+		}
+	}
+	});
+	editor.on('change',function(e){
+		opj.value = editor.getValue();
+	});
+	create_2('salida',vle2+b+"\n</body>\n</html>",'cntSalida');
+	editor.setSize(null,600);
+</script>

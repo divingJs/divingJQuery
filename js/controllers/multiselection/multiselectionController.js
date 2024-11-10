@@ -1,7 +1,7 @@
 /*Multiselects*/
 var dtsMulti = [];
 $.each(rtn,function(i,v){
-    dtsMulti.push({VALUE:v.COL_CVE_N,MENSAJE:v.COL_DESC_STR});
+    dtsMulti.push({VALUE:v.ID,MENSAJE:v.CATEGORIA});
 });
 dtsMulti.sort(function(a,b){return a.VALUE - b.VALUE;});
 var dtsMt = dtsMulti.filter(function(item, index, self) {

@@ -77,8 +77,23 @@ $('#configButton').divListView({
         {text:'Icono',href:'/pages/Button/Config/icon.html'}
     ],
     openTo:'#salidaCofigButton',
-    class:'list-group-flush'
-
+    class:'list-group-flush',
+    click:function(){
+        var d = $('#configButton').data('divListView');
+        var c = d.selected;
+        $.each(d.items,function(i,v){
+            $(v).removeClass('list-group-item-info');
+        });
+        $(this).addClass('list-group-item-info');
+        if(d.openTo!=null){
+             $( d.openTo ).load(
+                (c.href.startsWith('http')?
+                c.href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + c.href
+                )
+            );
+        }
+    }
 });
 
 $('#salidaCofigButton').load('pages/Button/Config/creacion.html');

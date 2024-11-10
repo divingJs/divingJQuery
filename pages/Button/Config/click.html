@@ -44,6 +44,7 @@
 	};
 	var editor = CodeMirror.fromTextArea(area, {
 	mode: myModeSpec,
+	lineNumbers: true,
 	selectionPointer: true,
 	extraKeys: {
 		"Ctrl-Enter":function(e){
@@ -55,7 +56,7 @@
 		opj.value = editor.getValue();
 	});
 	create('salida',vle+b+"\n</body>\n</html>");
-
+	editor.setSize(null,600);
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');

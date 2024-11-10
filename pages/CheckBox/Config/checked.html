@@ -53,6 +53,7 @@
 	var editor = CodeMirror.fromTextArea(area, {
 	mode: myModeSpec,
 	selectionPointer: true,
+	lineNumbers: true,
 	extraKeys: {
 		"Ctrl-Enter":function(e){
 			create('salida',opj.value);

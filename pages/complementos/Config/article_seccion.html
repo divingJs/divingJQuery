@@ -1,0 +1,60 @@
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-4" id="en">
+					<textarea type="text" id="codigo">
+					</textarea>
+				</div>
+				<div class="col-sm-8" id="sd">
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<template id="tmp">
+	
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="d-article">
+				<div class="d-article-section">
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quia natus ipsam perferendis alias minima harum, libero beatae repellat dolores quisquam.</p>
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo amet sed quidem temporibus nihil vitae explicabo quos incidunt ad fugit?</p>
+					<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti quisquam aliquid velit quibusdam similique maxime nemo perferendis reiciendis repellat. Earum?</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</template>
+<script type="text/javascript">
+	var area = document.getElementById("codigo");
+	var b = $('#tmp')[0].innerHTML;
+	area.value=vle2+b+"\n</body>\n</html>";
+	var opj={
+		value : vle2+b+"\n</body>\n</html>"
+	};
+	var editor = CodeMirror.fromTextArea(area, {
+	mode: myModeSpec,
+	selectionPointer: true,
+	lineNumbers: true,
+	extraKeys: {
+		"Ctrl-Enter":function(e){
+			create('salida',opj.value);
+		}
+	}
+	});
+	editor.on('change',function(e){
+		opj.value = editor.getValue();
+	});
+	create('salida',vle2+b+"\n</body>\n</html>");
+	editor.setSize(null,600);
+
+</script>

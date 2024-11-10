@@ -78,7 +78,23 @@ $('#configura').divListView({
         {text:'Checked',href:'/pages/CheckBox/Config/checked.html'}
     ],
     openTo:'#salidaCofigura',
-    class:'list-group-flush'
+    class:'list-group-flush',
+    click:function(){
+        var d = $('#configura').data('divListView');
+        var c = d.selected;
+        $.each(d.items,function(i,v){
+            $(v).removeClass('list-group-item-info');
+        });
+        $(this).addClass('list-group-item-info');
+        if(d.openTo!=null){
+             $( d.openTo ).load(
+                (c.href.startsWith('http')?
+                c.href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + c.href
+                )
+            );
+        }
+    }
 
 });
 
