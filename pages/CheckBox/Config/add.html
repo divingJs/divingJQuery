@@ -32,37 +32,26 @@
 	<div class="d-article">
 		<div class="d-article-section">
 			<p>
-				Agrega iconos para hacer un elemento mas atractivo.
+				Agrega los elementos que se requieran en tiempo real
 			</p>
-			<b>checked</b> icono al momento de estar seleccionado.<br>
-			<b>unchecked</b> icono antes de estar checado
+			<b>add</b> : requiere elemento con la estructura text y value 
 		</div>
 	</div>
 
 	<div id="checkeds"></div>
 	<script type="text/javascript">
-		
 		$('#checkeds').divCheckBox({
 		    items:[{text:' uno'    , value:'uno'},
 		           {text:' dos'    , value:'dos'},
 		           {text:' tres'   , value:'tres'},
 		           {text:' cuatro' , value:'cuatro'}
-		          ],
-		    icon:{
-		        checked:'icon-check-circle1',
-		        unchecked:'icon-panorama_fish_eyeradio_button_unchecked'
-		    }
+		          ]
 		});
+      var check = $('#checkeds').data('divCheckBox');
+		  check.add({text:' cinco' , value:'cinco'});
 	</script>
 </template>
 <script type="text/javascript">
-	/*
-	,
-		    click:function(){
-		        var chk = $('#checkeds').data('divCheckBox');
-		        console.log( chk.getValue() );
-		    }
-	*/
 	var area = document.getElementById("codigo");
 	var b = $('#tmp')[0].innerHTML;
 	area.value=vle+b+"\n</body>\n</html>";

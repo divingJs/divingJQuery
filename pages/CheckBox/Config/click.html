@@ -23,11 +23,16 @@
 </div>
 
 
-
-
-
-
 <template id="tmp">
+	<div class="d-article">
+		<div class="d-article-section">
+			<p>
+				Agrega la funcion click si se requiere una accion al momento de seleccionar un elemento
+			</p>
+			<b>click</b> : accion al dar click en cualquiera de los checkbox
+		</div>
+	</div>
+
 	<div id="checkeds"></div>
 	<script type="text/javascript">
 		$('#checkeds').divCheckBox({
@@ -36,10 +41,6 @@
 		           {text:' tres'   , value:3},
 		           {text:' cuatro' , value:4}
 		          ],
-		    icon:{
-		        checked:'icon-check-circle1',
-		        unchecked:'icon-panorama_fish_eyeradio_button_unchecked'
-		    },
 		    click:function(){
 		        var chk = $('#checkeds').data('divCheckBox');
 		        console.log( chk.getValue() );

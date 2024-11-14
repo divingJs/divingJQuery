@@ -11,10 +11,30 @@
 		<div class="d-article-section">
 			<div class="row">
 				<div class="col-sm-12" id="en">
-					<textarea type="text" id="codigo">
-					</textarea>
+					<div id="cdg"></div>
+					<!--<textarea type="text" id="codigo"></textarea>-->
 				</div>
 				<div class="col-sm-12" id="sd">
+					<div class="row" id="desc">
+						<div class="col-sm-12">
+							<div class="d-article">
+								<div class="d-article-section">
+									<p>Agrega icono al boton para un mejor diseño</p>
+									<ul>
+										<li>icon: propiedades del icono </li>
+										<li>class: la clase del icono que se quiere agregar </li>
+										<li>pos: posicion en alineacion al texto, si no se tiene texto se muestra solo el icono </li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-11"></div>
+						<div class="col-sm-1">
+							<div id="btnDesc"></div>
+						</div>
+					</div>
 					<div id="cntSalida" class="cntSalida"></div>
 				</div>	
 			</div>
@@ -22,51 +42,53 @@
 	</div>
 </div>
 <template id="tmp">
-<div id="boton1"></div>
-<div id="boton2"></div>
+	<div id="boton1"></div>
+	<div id="boton2"></div>
+	<div id="boton3"></div>
 
-<script type="text/javascript">
-	$('#boton1').divButton({
-		text:'Clickme',
-		type:'primary',
-		icon:{
-			class:'icon-close1',
-			pos:'before'
-		}
-	});
+	<script type="text/javascript">
+		$('#boton1').divButton({
+			text:'clickme',
+			icon:{
+				class:'icon-close1',
+				pos:'left'
+			}
+		});
 
-	$('#boton2').divButton({
-		text:'Clickme',
-		type:'primary',
-		icon:{
-			class:'icon-close1',
-			pos:'after'
-		}
-	});
-</script>
+		$('#boton2').divButton({
+			text:'clickme',
+			icon:{
+				class:'icon-close1',
+				pos:'right'
+			}
+		});
+
+		$('#boton3').divButton({
+			icon:{
+				class:'icon-close1'
+			}
+		});
+	</script>
 </template>
 <script type="text/javascript">
-	var area = document.getElementById("codigo");
+
+
 	var b = $('#tmp')[0].innerHTML;
-	area.value=vle+b+"\n</body>\n</html>";
-	var opj={
-		value : vle+b+"\n</body>\n</html>"
-	};
-	var editor = CodeMirror.fromTextArea(area, {
-	mode: myModeSpec,
-	selectionPointer: true,
-	lineNumbers: true,
-	extraKeys: {
-		"Ctrl-Enter":function(e){
-			create('salida',opj.value);
+	var edt = $('#cdg').divCoding({
+		prepend:vle,
+		append:'</body>\n</html>',
+		value:b,
+		keys:{
+			"Ctrl-Enter":function(e){
+				var et=$('#cdg').data('divCoding');
+				create('salida',et.value);
+			}
 		}
-	}
-	});
-	editor.on('change',function(e){
-		opj.value = editor.getValue();
-	});
+	}).data('divCoding');
+	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
-	editor.setSize(null,600);
+
+
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -76,5 +98,17 @@
 		$('#sd').toggleClass('col-sm-12');
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
+	});
+	$('#btnDesc').divButton({
+		type:'link',
+		icon:{
+			class:'icon-upload7'
+		},
+		click:function(){
+			var btn = $('#btnDesc').data('divButton');
+			btn.toggleClass('icon-upload7');
+			btn.toggleClass('icon-download8');
+			$('#desc').toggleClass('d-hidden');
+		}
 	});
 </script>

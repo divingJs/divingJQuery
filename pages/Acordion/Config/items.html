@@ -1,0 +1,107 @@
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<div id="cdg"></div>
+				</div>
+				<div class="col-sm-12" id="sd">
+
+					<div class="row" id="desc">
+						<div class="col-sm-12">
+							<div class="d-article">
+								<div class="d-article-section">
+									<p>Crea acordiones de una manera rapida</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-11"></div>
+						<div class="col-sm-1">
+							<div id="btnDesc"></div>
+						</div>
+					</div>
+
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+<template id="tmp">
+	<div id="accordion"></div>
+	<div id="elemento1">
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima, voluptatum praesentium blanditiis natus corporis, consequuntur. In quaerat, modi officiis est pariatur ratione recusandae. Asperiores maxime, vero aliquid harum exercitationem nostrum impedit voluptatem veritatis delectus explicabo minima possimus laborum labore cupiditate distinctio facilis nisi ad vitae, porro totam modi. Magni, vero.</p>
+		<p>Lorem ipsum dolor sit amet, consectetur, adipisicing elit. Sit ut pariatur, non facilis iure, odio natus voluptatem hic veritatis, reiciendis rerum illum temporibus iusto repudiandae qui atque eius quidem quisquam? Repudiandae quae temporibus minus accusamus at commodi alias qui, ipsa quas dolorem voluptates eos inventore enim, quidem pariatur vitae, reiciendis?</p>
+		<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nemo dolores laudantium nostrum sapiente corrupti doloremque modi nam incidunt! Ducimus, at impedit. Sapiente eius nisi necessitatibus voluptatem voluptates dignissimos animi eligendi modi, error adipisci voluptas culpa, quae cupiditate facere nemo aliquid numquam. Quo eius, fuga. Recusandae, dolore magnam! Voluptatem, dolorum autem.</p>
+		<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut nam placeat recusandae quasi deserunt perferendis excepturi labore repellendus esse earum facere sed fugit ab velit distinctio amet tempore suscipit deleniti, enim? Tenetur sed hic libero error rerum sequi ex, optio veniam nemo non perspiciatis labore. Hic ipsam neque modi dolorum!</p>
+	</div>
+	<script type="text/javascript">
+		$('#accordion').divAccordion({
+			items:[
+				{title:'item 1',content:$('#elemento1')},
+				{title:'item 2',content:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, culpa?'},
+				{title:'item 3',content:'Quibusdam quasi, nesciunt. Minima soluta, rem, vero atque laboriosam recusandae!'},
+				{title:'item 4',content:'Reprehenderit consequatur vero, aut sit dolorem ab accusamus dolore incidunt!'}
+				]
+		});
+	</script>
+
+
+</template>
+<script type="text/javascript">
+	
+	
+	var b = $('#tmp')[0].innerHTML;
+	var edt = $('#cdg').divCoding({
+		prepend:vle,
+		append:'</body>\n</html>',
+		value:b,
+		keys:{
+			"Ctrl-Enter":function(e){
+				var et=$('#cdg').data('divCoding');
+				create('salida',et.value);
+			}
+		}
+	}).data('divCoding');
+	edt.editor.setSize(null,600);
+	create('salida',vle+b+"\n</body>\n</html>");
+
+	
+	$('#btnConfig').click(function(){
+		$(this).toggleClass('icon-navigate_nextchevron_right');
+		$('#menuConfig').toggleClass('d-hidden');
+		$('#salidaCofing').toggleClass('col-sm-12');
+		$('#salidaCofing').toggleClass('col-sm-8');
+		$('#en').toggleClass('col-sm-12');
+		$('#sd').toggleClass('col-sm-12');
+		$('#en').toggleClass('col-sm-6');
+		$('#sd').toggleClass('col-sm-6');
+	});
+
+
+
+	$('#btnDesc').divButton({
+		type:'link',
+		icon:{
+			class:'icon-upload7'
+		},
+		click:function(){
+			var btn = $('#btnDesc').data('divButton');
+			btn.toggleClass('icon-upload7');
+			btn.toggleClass('icon-download8');
+			$('#desc').toggleClass('d-hidden');
+		}
+	});
+	
+
+</script>

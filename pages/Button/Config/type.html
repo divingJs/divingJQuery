@@ -20,8 +20,9 @@
 						<div class="col-sm-12">
 							<div class="d-article">
 								<div class="d-article-section">
-									<p>Crea Botones a partir de un div</p>
-									<div><n>text:</n> texto que se estara mostrando en el boton</div>
+									<p>Agrega diferentes estilos a los botones </p>
+									<div><n>type:</n> tipo de boton que se quiere generar </div>
+									<div>["primary","secondary","success","danger","warning","info","light","dark","link"]</div>
 								</div>
 							</div>
 						</div>
@@ -40,15 +41,17 @@
 	</div>
 </div>
 <template id="tmp">
-	<div id="boton"></div>
-	<script type="text/javascript">
-		$("#boton").divButton({
-			text:"Clickme"
-		});
-	</script>
+<div id="boton"></div>
+<script type="text/javascript">
+	$('#boton').divButton({
+		text:'clickme',
+		type:'danger'
+	});
+</script>
 </template>
 <script type="text/javascript">
-	
+
+
 	var b = $('#tmp')[0].innerHTML;
 	var edt = $('#cdg').divCoding({
 		prepend:vle,
@@ -64,6 +67,7 @@
 	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
+
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -74,6 +78,7 @@
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
 	});
+
 	
 	$('#btnDesc').divButton({
 		type:'link',

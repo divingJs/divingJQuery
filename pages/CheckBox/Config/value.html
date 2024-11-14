@@ -12,39 +12,39 @@
 			<div class="row">
 				<div class="col-sm-12" id="en">
 					<div id="cdg"></div>
-					<!--<textarea type="text" id="codigo"></textarea>-->
+					<!--
+						<textarea type="text" id="codigo"></textarea>
+					-->
 				</div>
 				<div class="col-sm-12" id="sd">
-
-					<div class="row" id="desc">
-						<div class="col-sm-12">
-							<div class="d-article">
-								<div class="d-article-section">
-									<p>Crea Botones a partir de un div</p>
-									<div><n>text:</n> texto que se estara mostrando en el boton</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-11"></div>
-						<div class="col-sm-1">
-							<div id="btnDesc"></div>
-						</div>
-					</div>
-
 					<div id="cntSalida" class="cntSalida"></div>
 				</div>	
 			</div>
 		</div>
 	</div>
 </div>
+
+
 <template id="tmp">
-	<div id="boton"></div>
+	<div class="d-article">
+		<div class="d-article-section">
+			<p>
+				obtiene los elementos seleccionados
+			</p>
+			<b>getValue()</b> : devuelve un arreglo con los value de los elementos seleccionados.
+		</div>
+	</div>
+
+	<div id="checkeds"></div>
 	<script type="text/javascript">
-		$("#boton").divButton({
-			text:"Clickme"
-		});
+		var chk =$('#checkeds').divCheckBox({
+		    items:[{text:' uno'    , value:1},
+		           {text:' dos'    , value:2,checked:true},
+		           {text:' tres'   , value:3,checked:true},
+		           {text:' cuatro' , value:4}
+		          ]
+		}).data('divCheckBox');
+        console.log( chk.value );
 	</script>
 </template>
 <script type="text/javascript">
@@ -73,18 +73,6 @@
 		$('#sd').toggleClass('col-sm-12');
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
-	});
-	
-	$('#btnDesc').divButton({
-		type:'link',
-		icon:{
-			class:'icon-upload7'
-		},
-		click:function(){
-			var btn = $('#btnDesc').data('divButton');
-			btn.toggleClass('icon-upload7');
-			btn.toggleClass('icon-download8');
-			$('#desc').toggleClass('d-hidden');
-		}
+
 	});
 </script>

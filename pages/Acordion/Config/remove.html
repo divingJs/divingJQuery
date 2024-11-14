@@ -12,7 +12,6 @@
 			<div class="row">
 				<div class="col-sm-12" id="en">
 					<div id="cdg"></div>
-					<!--<textarea type="text" id="codigo"></textarea>-->
 				</div>
 				<div class="col-sm-12" id="sd">
 
@@ -20,8 +19,7 @@
 						<div class="col-sm-12">
 							<div class="d-article">
 								<div class="d-article-section">
-									<p>Crea Botones a partir de un div</p>
-									<div><n>text:</n> texto que se estara mostrando en el boton</div>
+									<p>Crea acordiones de una manera rapida</p>
 								</div>
 							</div>
 						</div>
@@ -40,14 +38,24 @@
 	</div>
 </div>
 <template id="tmp">
-	<div id="boton"></div>
+	<div id="accordion"></div>
 	<script type="text/javascript">
-		$("#boton").divButton({
-			text:"Clickme"
-		});
+		var ac = $('#accordion').divAccordion({
+			items:[
+				{title:'item 1',content:'Lorem ipsum dolor sit amet.'},
+				{title:'item 2',content:'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, culpa?'},
+				{title:'item 3',content:'Quibusdam quasi, nesciunt. Minima soluta, rem, vero atque laboriosam recusandae!'},
+				{title:'item 4',content:'Reprehenderit consequatur vero, aut sit dolorem ab accusamus dolore incidunt!'}
+				]
+		}).data('divAccordion');
+
+	    ac.remove('item 3');
 	</script>
+
+
 </template>
 <script type="text/javascript">
+	
 	
 	var b = $('#tmp')[0].innerHTML;
 	var edt = $('#cdg').divCoding({
@@ -64,6 +72,7 @@
 	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
+	
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -74,7 +83,9 @@
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
 	});
-	
+
+
+
 	$('#btnDesc').divButton({
 		type:'link',
 		icon:{
@@ -87,4 +98,6 @@
 			$('#desc').toggleClass('d-hidden');
 		}
 	});
+	
+
 </script>

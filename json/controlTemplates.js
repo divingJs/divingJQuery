@@ -45,24 +45,10 @@ function create(frame,text){
     doc.write(body);
     doc.close();
 	setTimeout(function(){
-		var ifrm = $('#'+frame)[0].contentWindow;
-		var doc = ifrm.document;
-		var jsCript = doc.body.querySelectorAll('script');
-		var js = '';
-		$.each(jsCript,function(i,v){
-			js+=v.childNodes[0].textContent;
-		});
-		try{
-			ifrm.eval(js);
-		}catch(e){
-			console.log( e );
-		}
-	},100);
-	setTimeout(function(){
-		var he = $($('#codigo')[0].nextElementSibling)[0].offsetHeight;
+		var he = $('.CodeMirror-sizer')[0].offsetHeight;
 		$('#salida')[0].style.height=he+'px';
 		$('#salida')[0].style.width='100%';
-		$('#salida')[0].style.border='solid 1px #f4f4f4';
+		$('#salida')[0].style.border='solid 0px #f4f4f4';
 	},100);
 }
 
@@ -88,7 +74,7 @@ function create_2(frame,text,idIfrOut){
     doc.write(head);
     doc.write(body);
     doc.close();
-	setTimeout(function(){
+	/*setTimeout(function(){
 		var ifrm = $('#'+frame)[0].contentWindow;
 		var doc = ifrm.document;
 		var jsCript = doc.body.querySelectorAll('script');
@@ -101,5 +87,5 @@ function create_2(frame,text,idIfrOut){
 		}catch(e){
 			console.log( e );
 		}
-	},100);
+	},100);*/
 }

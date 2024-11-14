@@ -12,43 +12,43 @@
 			<div class="row">
 				<div class="col-sm-12" id="en">
 					<div id="cdg"></div>
-					<!--<textarea type="text" id="codigo"></textarea>-->
+					<!--
+						<textarea type="text" id="codigo"></textarea>
+					-->
 				</div>
 				<div class="col-sm-12" id="sd">
-
-					<div class="row" id="desc">
-						<div class="col-sm-12">
-							<div class="d-article">
-								<div class="d-article-section">
-									<p>Crea Botones a partir de un div</p>
-									<div><n>text:</n> texto que se estara mostrando en el boton</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-11"></div>
-						<div class="col-sm-1">
-							<div id="btnDesc"></div>
-						</div>
-					</div>
-
 					<div id="cntSalida" class="cntSalida"></div>
 				</div>	
 			</div>
 		</div>
 	</div>
 </div>
+
 <template id="tmp">
-	<div id="boton"></div>
+	<div class="d-article">
+		<div class="d-article-section">
+			<p>
+				La creacion de checkbox con su accion y lectura de elementos seleccionados de una manera sencilla
+			</p>
+			<b>items</b> cada item es un elemento que formara un checkbox<br>
+			<b>text</b> texto a mostrar<br>
+			<b>value</b> valor a obtener una vez seleccionado el checkbox
+
+		</div>
+	</div>
+	<div id="checkeds"></div>
 	<script type="text/javascript">
-		$("#boton").divButton({
-			text:"Clickme"
+		$('#checkeds').divCheckBox({
+		    items:[{text:' uno'    , value:'uno'},
+		           {text:' dos'    , value:'dos'},
+		           {text:' tres'   , value:'tres'},
+		           {text:' cuatro' , value:'cuatro'}
+		          ]
 		});
 	</script>
 </template>
 <script type="text/javascript">
-	
+
 	var b = $('#tmp')[0].innerHTML;
 	var edt = $('#cdg').divCoding({
 		prepend:vle,
@@ -64,6 +64,7 @@
 	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
+
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -73,18 +74,6 @@
 		$('#sd').toggleClass('col-sm-12');
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
-	});
-	
-	$('#btnDesc').divButton({
-		type:'link',
-		icon:{
-			class:'icon-upload7'
-		},
-		click:function(){
-			var btn = $('#btnDesc').data('divButton');
-			btn.toggleClass('icon-upload7');
-			btn.toggleClass('icon-download8');
-			$('#desc').toggleClass('d-hidden');
-		}
+
 	});
 </script>

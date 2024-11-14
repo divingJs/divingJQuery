@@ -15,13 +15,11 @@
 					<!--<textarea type="text" id="codigo"></textarea>-->
 				</div>
 				<div class="col-sm-12" id="sd">
-
 					<div class="row" id="desc">
 						<div class="col-sm-12">
 							<div class="d-article">
 								<div class="d-article-section">
-									<p>Crea Botones a partir de un div</p>
-									<div><n>text:</n> texto que se estara mostrando en el boton</div>
+									<p>Desabilita el boton con el metodo enabled</p>
 								</div>
 							</div>
 						</div>
@@ -32,7 +30,6 @@
 							<div id="btnDesc"></div>
 						</div>
 					</div>
-
 					<div id="cntSalida" class="cntSalida"></div>
 				</div>	
 			</div>
@@ -42,13 +39,15 @@
 <template id="tmp">
 	<div id="boton"></div>
 	<script type="text/javascript">
-		$("#boton").divButton({
-			text:"Clickme"
-		});
+		var btn = $('#boton').divButton({
+			text:'clickme'
+		}).data('divButton');
+		btn.enabled(false);
 	</script>
 </template>
 <script type="text/javascript">
-	
+
+
 	var b = $('#tmp')[0].innerHTML;
 	var edt = $('#cdg').divCoding({
 		prepend:vle,
@@ -64,6 +63,7 @@
 	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
+
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -74,7 +74,6 @@
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
 	});
-	
 	$('#btnDesc').divButton({
 		type:'link',
 		icon:{

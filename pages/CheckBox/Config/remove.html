@@ -29,40 +29,57 @@
 
 <template id="tmp">
 
+
 	<div class="d-article">
 		<div class="d-article-section">
 			<p>
-				Agrega iconos para hacer un elemento mas atractivo.
+				remueve los elementos que se requieran en tiempo real
 			</p>
-			<b>checked</b> icono al momento de estar seleccionado.<br>
-			<b>unchecked</b> icono antes de estar checado
+			<b>remove(1)</b> : por indice que va de 0 a n<br />
+			<b>remove({text:'uno'})</b> : por texto que se esta mostrando.
 		</div>
 	</div>
 
-	<div id="checkeds"></div>
-	<script type="text/javascript">
-		
-		$('#checkeds').divCheckBox({
-		    items:[{text:' uno'    , value:'uno'},
-		           {text:' dos'    , value:'dos'},
-		           {text:' tres'   , value:'tres'},
-		           {text:' cuatro' , value:'cuatro'}
-		          ],
-		    icon:{
-		        checked:'icon-check-circle1',
-		        unchecked:'icon-panorama_fish_eyeradio_button_unchecked'
-		    }
-		});
-	</script>
+
+    <div class="d-article">
+      <div class="d-article-section">
+        <div id="checkbox_1"></div>
+      </div>
+    </div>
+    <div class="d-article">
+      <div class="d-article-section">
+        <div id="checkbox_2"></div>
+
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#checkbox_1').divCheckBox({
+        items:[{text:'uno'    , value:'uno'},
+               {text:'dos'    , value:'dos'},
+               {text:'tres'   , value:'tres'},
+               {text:'cuatro' , value:'cuatro'}
+              ],
+        dir:'left'
+      });
+      var check = $('#checkbox_1').data('divCheckBox');
+      check.remove(2);
+
+
+      $('#checkbox_2').divCheckBox({
+        items:[{text:'uno'    , value:'uno'},
+               {text:'dos'    , value:'dos'},
+               {text:'tres'   , value:'tres'},
+               {text:'cuatro' , value:'cuatro'}
+              ],
+        dir:'left'
+      });
+      var check_2 = $('#checkbox_2').data('divCheckBox');
+      check_2.remove({text:'dos'});
+    </script>
+
 </template>
+
 <script type="text/javascript">
-	/*
-	,
-		    click:function(){
-		        var chk = $('#checkeds').data('divCheckBox');
-		        console.log( chk.getValue() );
-		    }
-	*/
 	var area = document.getElementById("codigo");
 	var b = $('#tmp')[0].innerHTML;
 	area.value=vle+b+"\n</body>\n</html>";

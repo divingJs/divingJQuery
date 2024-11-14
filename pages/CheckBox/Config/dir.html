@@ -28,19 +28,45 @@
 
 
 <template id="tmp">
-	<div id="checkeds"></div>
+
+	<div class="d-article">
+		<div class="d-article-section">
+			<p>
+				Puedes disponer de un alineamiento horizontal con solo agregar la propiedad dir 
+			</p>
+			<b>dir</b> orientacion de como se quieren los checkbox.
+		</div>
+	</div>
+
+	<div class="d-article">
+		<div class="d-article-section">
+			<div id="left"></div>
+		</div>
+	</div>
+
+	<div class="d-article">
+		<div class="d-article-section">
+			<div id="right"></div>
+		</div>
+	</div>
 	<script type="text/javascript">
-		$('#checkeds').divCheckBox({
+		$('#left').divCheckBox({
 		    items:[{text:' uno'    , value:1},
 		           {text:' dos'    , value:2},
 		           {text:' tres'   , value:3},
 		           {text:' cuatro' , value:4}
 		          ],
-		    icon:{
-		        checked:'icon-check-circle1',
-		        unchecked:'icon-panorama_fish_eyeradio_button_unchecked'
-		    },
 		    dir:'left'
+		});
+
+
+		$('#right').divCheckBox({
+		    items:[{text:' uno'    , value:1},
+		           {text:' dos'    , value:2},
+		           {text:' tres'   , value:3},
+		           {text:' cuatro' , value:4}
+		          ],
+		    dir:'right'
 		});
 	</script>
 </template>
