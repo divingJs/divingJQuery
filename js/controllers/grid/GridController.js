@@ -1,3 +1,5 @@
+/*
+
 $('#previo').click(function(){
     var cnt = $( this ).parent().find('div[class*=d-article]');
     $.each(cnt,function(i,v){
@@ -29,20 +31,29 @@ $('#grid').divGrid({
         {field:'PRODUCTO'      , title:'PRODUCTO'},
         {field:'CATEGORIA'     , title:'CATEGORIA'},
         {field:'PRECIO'        , title:'PRECIO',format:"{0:u2}"},
-        {field:'STOCK'         , title:'STOCK',
-            attributes:{'style':"#=STOCK<20?'background:rgb(166,166,241)':'background:rgb(211,140,140)'#"}},
+        {field:'STOCK'         , title:'STOCK',attributes:{'style':"#=STOCK<20?'background:rgb(166,166,241)':'background:rgb(211,140,140)'#"}},
         {field:'FECHA_INGRESO' , title:'FECHA_INGRESO',format:'{0:dd/MM/yyyy}'}
         ],
     width: '100%'
     ,height: '300px',
     sortable:true
 });
+*/
 var g = $('#grid').data('divGrid');
 $('#config').divListView({
     elements:[
         {text:'Configuracion',elements:[
             {text:'Creacion',href:'/pages/Grid/Config/creacion.html'},
-            {text:'Columns',href:'/pages/Grid/Config/columns.html'}
+            {text:'Columns',elements:[
+                {text:'Fields',href:'/pages/Grid/Config/columns.html'},
+                {text:'width',href:'/pages/Grid/Config/column.with.html'},
+                {text:'Format',href:'/pages/Grid/Config/fromat.html'},
+                {text:'Attributes',href:'/pages/Grid/Config/attributes.html'},
+                {text:'Editor',href:'/pages/Grid/Config/columns.editor.html'}
+                ]},
+            {text:'Sortable',href:'/pages/Grid/Config/sortable.html'},
+            {text:'Scrollable',href:'/pages/Grid/Config/scrollable.html'},
+            {text:'Group',href:'/pages/Grid/Config/group.html'}
         ]}
     ],
     openTo:'#salidaCofig',

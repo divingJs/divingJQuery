@@ -45,13 +45,28 @@
 
 
 /* Ancho de las columnas fijado */
-.grid-scrollable-table th, table td {padding: 8px;text-align: center;}
+.grid-scrollable-table th, table td {
+	padding: 8px;
+	text-align: center;
+	
+}
 /* Mantener el scroll en tbody */
-.grid-scrollable-table tbody {display: block;overflow-y: auto;overflow-x: hidden;}
+.grid-scrollable-table tbody {
+	display: block;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
 /* Mantener el thead en su lugar y hacer que las columnas coincidan */
-.grid-scrollable-table thead, tbody tr {display: table;width: 100%;table-layout: fixed;}
+.grid-scrollable-table thead, tbody tr {
+	display: table;
+	width: 100%;
+	table-layout: fixed;
+
+}
 /* Ajuste adicional para que el thead no se desplace */
-.grid-scrollable-table thead {width: calc(100% - 17px);}
+.grid-scrollable-table thead {
+	width: calc(100% - 17px);
+}
 
 /*checkbox*/
 .d-parent-checkbox{padding: 1em;}
@@ -65,3 +80,6 @@
 .d-rb-left {float: left;}
 .d-rb-right{float: right;}
 .d-rb-selected{background-color: var(--bs-info-bg-subtle);color: var(--bs-info-text-emphasis)}
+/*multiselect*/
+.d-multi-selection select option.selected {background-color: var(--bs-info-bg-subtle);}
+.d-multi-selection .list-selected .item-selected:hover{background-color: var(--bs-gray-100 );cursor:pointer;}

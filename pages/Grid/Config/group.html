@@ -20,7 +20,8 @@
 						<div class="col-sm-12">
 							<div class="d-article">
 								<div class="d-article-section">
-									<p>Construye grid de manera rapida y facil</p>
+									<p>Ajusta las columnas </p><br />
+									<b>width</b> : ancho de columna<br />
 								</div>
 							</div>
 						</div>
@@ -44,10 +45,29 @@
 		$("#grid").divGrid({
 			dataSource:new diving.data.DataSource({
               data:[
-                {name:'Jane',age:30},
-                {name:'John',age:32}
-              ]
-            })
+                {name:'Jane',   age:30, genero: 'F'},
+                {name:'John',   age:22, genero: 'M'},
+                {name:'Petter', age:38, genero: 'M'},
+                {name:'Ana',    age:23, genero: 'F'},
+                {name:'Zack',   age:35, genero: 'M'},
+                {name:'Wilson', age:24, genero: 'M'},
+                {name:'William',age:18, genero: 'M'},
+                {name:'Noel',   age:60, genero: 'M'}
+              ],
+              schema:{
+              	model:{
+              		fields:{
+              			name:{type:'string'},
+              			age:{type:'number'},
+              			genero:{type:'string'}
+              		}
+              	}
+              },
+              group:[{field:'genero'}]
+            }),
+            columns:[{field:'name', title:'NOMBRE'},
+            		 {field:'age',  title:'EDAD'},
+            		 {field:'genero',  title:'GENERO'}]
 		});
 	</script>
 </template>
@@ -61,7 +81,7 @@
 		value:b,
 		keys:{
 			"Ctrl-Enter":function(e){
-				var et=$('#cdg').data('divCoding');
+				var et=$('#codigo').data('divCoding');
 				create('salida',et.value);
 			}
 		}
@@ -69,6 +89,7 @@
 	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
+	
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -80,7 +101,6 @@
 		$('#sd').toggleClass('col-sm-6');
 
 	});
-
 
 	$('#btnDesc').divButton({
 		type:'link',

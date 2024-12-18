@@ -20,7 +20,8 @@
 						<div class="col-sm-12">
 							<div class="d-article">
 								<div class="d-article-section">
-									<p>Construye grid de manera rapida y facil</p>
+									<p>Ajusta las columnas </p><br />
+									<b>width</b> : ancho de columna<br />
 								</div>
 							</div>
 						</div>
@@ -41,14 +42,44 @@
 <template id="tmp">
 	<div id="grid"></div>
 	<script type="text/javascript">
-		$("#grid").divGrid({
-			dataSource:new diving.data.DataSource({
-              data:[
-                {name:'Jane',age:30},
-                {name:'John',age:32}
-              ]
-            })
-		});
+     $("#grid").divGrid({
+          dataSource:new diving.data.DataSource({
+               data:[
+                    {name:'Jane',  age:30},
+                    {name:'John',  age:22}
+               ],
+               schema:{
+                    model:{
+                         fields:{
+                              name:{type:'string'},
+                              age:{type:'number'}
+                         }
+                    }
+               }
+          }),
+          columns:[
+               {field:'name',
+                title:'NOMBRE',
+                editor:function(container,options){
+                     var tarea = $('<div>',{id:options.field});
+                     container.append(tarea);
+                     tarea.divText({
+                          text:options.value,
+                          change:function(){
+                               var dt = $('#'+options.field).data('divText');
+                               options.model[options.field]=dt.text;
+                          },
+                          placeHolder:'area de texto',
+                          multiple:{
+                               row:3,
+                               col:10,
+                               resize:false
+                          }
+                     });
+                     tarea.find('textarea')[0].focus();
+                }},
+               {field:'age', title:'EDAD'}]
+     });
 	</script>
 </template>
 <script type="text/javascript">
@@ -61,7 +92,7 @@
 		value:b,
 		keys:{
 			"Ctrl-Enter":function(e){
-				var et=$('#cdg').data('divCoding');
+				var et=$('#codigo').data('divCoding');
 				create('salida',et.value);
 			}
 		}
@@ -69,6 +100,7 @@
 	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
+	
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -80,7 +112,6 @@
 		$('#sd').toggleClass('col-sm-6');
 
 	});
-
 
 	$('#btnDesc').divButton({
 		type:'link',

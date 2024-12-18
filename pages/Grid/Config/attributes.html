@@ -20,7 +20,8 @@
 						<div class="col-sm-12">
 							<div class="d-article">
 								<div class="d-article-section">
-									<p>Construye grid de manera rapida y facil</p>
+									<p>Da un estilo personalizado a tus columnas </p><br />
+									<b>attributes</b> : Asigna attributos a cada una de las celdas de la columna<br />
 								</div>
 							</div>
 						</div>
@@ -45,9 +46,13 @@
 			dataSource:new diving.data.DataSource({
               data:[
                 {name:'Jane',age:30},
-                {name:'John',age:32}
+                {name:'John',age:22}
               ]
-            })
+            }),
+            columns:[{field:'name',title:'NOMBRE'},
+            		 {field:'age',title:'EDAD',attributes:{
+            		 	'style':"#=age<30?'background:rgb(166,166,241);color: rgb(77,77,217);':'background:rgb(211,140,140);color: rgb(151,65,65);'#"}
+            		}]
 		});
 	</script>
 </template>
@@ -69,6 +74,7 @@
 	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
+	
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -80,7 +86,6 @@
 		$('#sd').toggleClass('col-sm-6');
 
 	});
-
 
 	$('#btnDesc').divButton({
 		type:'link',

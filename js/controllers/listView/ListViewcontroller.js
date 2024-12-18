@@ -1,4 +1,4 @@
-
+/*
 $('#listview').divListView({
     elements:[
         {text:'Elemento 1' , href:'#'},
@@ -10,7 +10,7 @@ $('#listview').divListView({
         {text:'Elemento 7' , href:"#"}
         ]
 });
-
+*/
 
 
 $('#config').divListView({
@@ -45,7 +45,7 @@ $('#config').divListView({
 });
 
 //$('#salidaCofig').load('pages/Button/Config/creacion.html');
-
+/*
 $('#previo').click(function(){
     var cnt = $( this ).parent().find('div[class*=d-article]');
     $.each(cnt,function(i,v){
@@ -54,3 +54,4 @@ $('#previo').click(function(){
         }
     });
 });
+*/

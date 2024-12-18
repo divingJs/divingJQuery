@@ -5,22 +5,19 @@
 		</div>
 	</div>
 </div>
-
 <div id="cntJS">
 	<div class="d-article">
 		<div class="d-article-section">
 			<div class="row">
 				<div class="col-sm-12" id="en">
-					<div id="codigo">
-					</div>
+					<div id="cdg"></div>
 				</div>
 				<div class="col-sm-12" id="sd">
-					
 					<div class="row" id="desc">
 						<div class="col-sm-12">
 							<div class="d-article">
 								<div class="d-article-section">
-									<p>Construye grid de manera rapida y facil</p>
+									<p>Crea multiselect de una manera rapida</p>
 								</div>
 							</div>
 						</div>
@@ -31,7 +28,6 @@
 							<div id="btnDesc"></div>
 						</div>
 					</div>
-
 					<div id="cntSalida" class="cntSalida"></div>
 				</div>	
 			</div>
@@ -39,23 +35,20 @@
 	</div>
 </div>
 <template id="tmp">
-	<div id="grid"></div>
+	<div id="multiSelect"></div>
 	<script type="text/javascript">
-		$("#grid").divGrid({
-			dataSource:new diving.data.DataSource({
-              data:[
-                {name:'Jane',age:30},
-                {name:'John',age:32}
-              ]
-            })
+		$('#multiSelect').divMultiSelect({
+			dataSource:['Rojo','Naranja','Amarillo','Verde','Azul','Índigo','Violeta','Rosa','Cian','Marrón','Gris','Negro']
 		});
 	</script>
+
+
 </template>
 <script type="text/javascript">
-
-
+	
+	
 	var b = $('#tmp')[0].innerHTML;
-	var edt = $('#codigo').divCoding({
+	var edt = $('#cdg').divCoding({
 		prepend:vle,
 		append:'</body>\n</html>',
 		value:b,
@@ -69,6 +62,7 @@
 	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
+	
 	$('#btnConfig').click(function(){
 		$(this).toggleClass('icon-navigate_nextchevron_right');
 		$('#menuConfig').toggleClass('d-hidden');
@@ -78,8 +72,8 @@
 		$('#sd').toggleClass('col-sm-12');
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
-
 	});
+
 
 
 	$('#btnDesc').divButton({
@@ -94,4 +88,6 @@
 			$('#desc').toggleClass('d-hidden');
 		}
 	});
+	
+
 </script>

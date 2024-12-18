@@ -1,5 +1,8 @@
 const diving = {
     template: (str, obj) => {
+        if(typeof str == "function"){
+            return str(obj);
+        }
         const regexStatic = /#:\s*([a-zA-Z_0-9]+)\s*#/g;
         str = str.replace(regexStatic, (_, key) => obj[key] || '');
         const regexDynamic = /#=\s*([^#]+?)\s*#/g;
@@ -41,7 +44,8 @@ const diving = {
     },
     normalizeText: texto => {
         try {
-            return decodeURIComponent(escape(texto));
+            let strTexto = String(texto);
+            return strTexto.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
         } catch (e) {
             console.error("Error decoding text:", e);
             return texto;
@@ -74,9 +78,13 @@ const diving = {
             currency: type === 'e' ? 'EUR' : type === 'm' ? 'MXN' : type === 'u' ? 'USD' : undefined,
         };
         return number.toLocaleString(diving.region, options);
-    }
+    },
+    fontSize:'1em'
 };
 window.diving = dvn=diving;
+setTimeout(function(){
+$('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
+},100);
 /*Boton*/
 (function() {
     var widget = {
@@ -198,91 +206,112 @@ window.diving = dvn=diving;
 })();
 /*MultiSelect*/
 (function() {
-    var widget = {
-        name: "MultiSelect",
-        init: function(prm) {
-            prm = $.extend(prm, {
-                classParent:"d-multiSelection",
-                class: ((prm.type) ? 'd-' + prm.type : 'd-multi-selection') + ((prm.class) ? ' ' + prm.class : '')
-            });
-            var widtgetData = {
-                enabled:function(e){
-                    var e = $(this.elem).data('divMultiSelection').elem;
-                },
-                dataSource: prm.dataSource,
-                dataTextField:prm.dataTextField||'',
-                dataValueField:prm.dataValueField||'',
-                elem:$(this)[0],
-                itemsSelected:[],
-                val:function(){
-                    return widtgetData.itemsSelected;
-                }
-            };
-            delete prm.dataSource;
-            widget.createElement(prm,widtgetData);
-            $(this).data('div'+widget.name, widtgetData);
-        },
-        createElement: function(p,data) {
-            $(data.elem).empty();
-            var wdt = this;
-            var ulSelected = $('<ul>',{class:'list-selected'});
-            var propId = $(data.elem).attr('id')+'-dvnMultiSelect';
-            var select = $('<select>',{class:"form-select",id:propId,'aria-label':"Default select example"})
-            var maxSelectItem = -1;
-            if(p.hasOwnProperty('maxSeletedItem')){
-                maxSelectItem = p.maxSeletedItem;
-            }
-            select.change(function(e){
-                var value = $(this).val();
-                var ntext = $("#"+propId+" option:selected").text();
-                $("#"+propId+" option:selected").addClass('selected');
-                if(data.itemsSelected.findIndex(objeto => objeto.value === value)==-1){
-                    var pasa=(maxSelectItem == -1)||(data.itemsSelected.length<maxSelectItem);
-                    if(pasa){
-                        ulSelected.append(
-                            $('<li>',{class:'item-selected'}).append(
-                                $('<label>',{class:'lvl-select',text:ntext,value:value})
-                            ).append(
-                                $('<em>',{class:'icon-clearclose',click:function(){
-                                        data.itemsSelected = data.itemsSelected.filter(objeto => (objeto.hasOwnProperty('value')?objeto.value:objeto) !== $($($(this).parent()).find('label')[0]).attr('value'));
-                                        $($(this).parent()).remove();
-                                    }
-                                })
-                            )
-                        );
-                        data.itemsSelected.push(value);
+     var widget = {
+          name: "MultiSelect",
+          init: function(prm) {
+               prm = $.extend(prm, {
+                    classParent:"d-multiSelection",
+                    class: ((prm.type) ? 'd-' + prm.type : 'd-multi-selection') + ((prm.class) ? ' ' + prm.class : ''),
+               });
+               var widtgetData = {
+                    dataSource: prm.dataSource,
+                    dataTextField:prm.dataTextField||'',
+                    dataValueField:prm.dataValueField||'',
+                    elem:$(this)[0],
+                    itemsSelected:[],
+                    val:function(){
+                         return widtgetData.itemsSelected;
+                    },
+                    destroy:function(){
+                        $(this.element).removeData('div'+widget.name);
+                        $(this.element)[0].remove();
                     }
-                }
-                if(p.hasOwnProperty('change')){
-                    p.change.constructor = select.change;
-                    p.change(data);
-                }
-            });
-            $(data.elem).addClass(p.class);
-            $(data.elem).append(ulSelected).append(select);
-            if(!data.dataSource.hasOwnProperty('options')){
-                $.each(data.dataSource,function(i,v){
-                    select.append( $('<option>',{value:v,text:v}));
-                });
-                p['origen']=1;
-            }else{
-                $.each(data.dataSource.options.data,function(i,v){
-                    if(typeof v == 'string'){
-                        select.append( $('<option>',{value:v,text:v}));
-                        p['origen']=2;
-                    }else{
-                        select.append( $('<option>',{value:v[data.dataValueField],text:v[data.dataTextField]}));
-                        p['origen']=3;
+               };
+               delete prm.dataSource;
+               widget.createElement(prm,widtgetData);
+               $(this).data('div'+widget.name, widtgetData);
+               return this;
+          },
+          createElement: function(p,data) {
+               $(data.elem).empty();
+               var wdt = this;
+               var ulSelected = $('<ul>',{class:'list-selected'});
+               var propId = $(data.elem).attr('id')+'-dvnMultiSelect';
+               var select = $('<select>',{class:"form-select",id:propId,'aria-label':"Default select example"})
+               var maxSelectItem = -1;
+               if(p.hasOwnProperty('maxSeletedItem')){
+                    maxSelectItem = p.maxSeletedItem;
+               }
+               select.change(function(e){
+                    var value = $(this).val();
+                    var ntext = $("#"+propId+" option:selected").text();
+                    $("#"+propId+" option:selected").addClass('selected');
+                    var ps = false;
+                    $.each(data.itemsSelected,function(i,objeto){
+                         if(objeto === (value+'')){
+                              ps=true;
+                         }
+                    });
+                    if(!ps){
+                         var pasa=(maxSelectItem == -1)||(data.itemsSelected.length<maxSelectItem);
+                         if(pasa){
+                              ulSelected.append(
+                                   $('<li>',{class:'item-selected'}).append(
+                                        $('<label>',{class:'lvl-select',text:ntext,value:value})
+                                   ).append(
+                                        $('<em>',{
+                                             class:'icon-clearclose',
+                                             click:function(){
+                                                  var value = $($(this)[0].previousElementSibling).attr('value');
+                                                  var text = $($(this)[0].previousElementSibling).text();
+                                                  $.each( $( select ).find('option'),function(i,v){
+                                                       if($(v).text()==text&&$(v).attr('value')==value ){
+                                                            $( v ).removeClass('selected');
+                                                       }
+                                                  });
+                                                  data.itemsSelected = data.itemsSelected.filter(objeto => (
+                                                       objeto.hasOwnProperty('value')?objeto.value:objeto
+                                                  ) !== $($($(this).parent()).find('label')[0]).attr('value'));
+                                                  $($(this).parent()).remove();
+                                             }
+                                        })
+                                   )
+                              );
+                              data.itemsSelected.push(value);
+                         }
                     }
-                });
-            }
-        },
-        selecciono:function(e){
-            console.log( e.target );
-        }
-    };
-    diving.widget(widget);
+                    if(p.hasOwnProperty('change')){
+                         p.change.constructor = select.change;
+                         p.change(data);
+                    }
+                    if(p.hasOwnProperty('select')){
+                         p.select.constructor=select.change;
+                         p.select(data);
+                    }
+               });
+               $(data.elem).addClass(p.class);
+               $(data.elem).append(ulSelected).append(select);
+               if(!data.dataSource.hasOwnProperty('options')){
+                    $.each(data.dataSource,function(i,v){
+                         select.append( $('<option>',{value:v,text:v}));
+                    });
+                    p['origen']=1;
+               }else{
+                    $.each(data.dataSource.options.dataItems,function(i,v){
+                         if(typeof v == 'string'){
+                              select.append( $('<option>',{value:v,text:v}) );
+                              p['origen']=2;
+                         }else{
+                              select.append( $('<option>',{value:v[data.dataValueField],text:v[data.dataTextField]}));
+                              p['origen']=3;
+                         }
+                    });
+               }
+          }
+     };
+     diving.widget(widget);
 })();
+
 /*textbox*/
 (function() {
     var widget = {
@@ -327,26 +356,32 @@ window.diving = dvn=diving;
             $(data.elem).append(elemento);
             elemento.on('change',function(evt){
                     var t = $($(this).parent()).data('divText');
-                    t.text=this.value;
-                    if(p.keyup){
-                        p.keyup.constructor=this.onkeyup;
-                        p.keyup();
+                    t.text = this.value;
+                    if(p.change){
+                        p.change.constructor=this.change;
+                        p.change();
                     }
                 });
             elemento.on('keyup',function(k){
                     var t = $($(this).parent()).data('divText');
-                    t.text=this.value;
-                    if(p.keyup){
-                        p.keyup.constructor=this.onkeyup;
-                        p.keyup();
+                    if(t!=undefined){
+                        t.text=this.value;
+                        t['key']=k.originalEvent.key;
+                        if(p.keyup){
+                            p.keyup.constructor=this.onkeyup;
+                            p.keyup();
+                        }
                     }
                 });
             elemento.on('keydown',function(k){
                     var t = $($(this).parent()).data('divText');
-                    t.text=this.value;
-                    if(p.keyup){
-                        p.keyup.constructor=this.onkeyup;
-                        p.keyup();
+                    if(t != undefined){
+                        t.text=this.value;
+                        t['key']=k.originalEvent.key;
+                        if(p.keydown){
+                            p.keydown.constructor=this.keydown;
+                            p.keydown();
+                        }
                     }
                 });
 
@@ -662,15 +697,16 @@ window.diving = dvn=diving;
                 var ul = document.createElement('ul');
                 $(ul).addClass('list-group list-group-flush d-hidden');
                 $(li).append(
-                    $('<label>',{text:c.text})
-                    ).append(
                     $('<em>',{
-                        class:'icon-download8',
+                        class:'icon-arrow_right',
                         click:function(){
-                            $(this).toggleClass('icon-upload7');
-                            $(this.nextElementSibling).toggleClass('d-hidden');
+                            $(this).toggleClass('icon-arrow_right');
+                            $(this).toggleClass('icon-arrow_drop_down');
+                            $($($(this).parent()).find('ul')[0]).toggleClass('d-hidden');
                         }
                         })//icon-upload7
+                    ).append(
+                        $('<label>',{text:c.text})
                     );
                 $(li).append(ul);
                 var wst = this;
@@ -717,7 +753,7 @@ window.diving = dvn=diving;
                 );
                 return nrtn;
             };
-            widget.columnas = (prm.columns||gc(prm.dataSource.options.data));
+            widget.columnas = (prm.columns||gc(prm.dataSource.options.dataItems));
             widget.createElement(prm, widtgetData);
             $(this).data('div' + widget.name, widtgetData);
         },
@@ -726,6 +762,7 @@ window.diving = dvn=diving;
             this.dataSource = data.dataSource;
             var width = (p.width != undefined) ? 'width:' + p.width : '';
             var t = $('<table>', {
+                role:'d-grid',
                 class: 'table table-striped grid-scrollable-table',
                 style: width
             });
@@ -750,7 +787,12 @@ window.diving = dvn=diving;
                 tbody: tb
             });
             widget.crHead(t,th);
-            $.each(p.dataSource.options.data.dataItems, function(i, v) {
+            var s=document.createElement('style');
+            s.setAttribute('type','text/css');
+            var st = '\n.grid-scrollable-table col {\n\twidth: auto !important;\n}';
+            s.innerHTML=st;
+            $(data.elem).append(s);
+            $.each(p.dataSource.options.dataItems, function(i, v) {
                 widget.addElement(tb, v);
             });
         },
@@ -764,8 +806,13 @@ window.diving = dvn=diving;
                 var c = document.createElement('col');
                 var cId = 'dGrid-' + '3-0-1-' + ("" + Math.random()).replace(/\D/g, "");
                 c.setAttribute('id', cId);
+                var w = 0;
+                if(widget.columnas[i].hasOwnProperty('width')){
+                    w= diving.addPx(widget.columnas[i].width);
+                    c.setAttribute('style','width: '+w);
+                }
                 cl.append(c);
-                widget.createHeader(trh, v, cId,th,1);
+                widget.createHeader(trh, v, cId,th,1,w);
             }
             th.find('tr').map(function(i,v){
                 if( $(v).attr('d-rsp')!=undefined ){
@@ -776,7 +823,7 @@ window.diving = dvn=diving;
                     });
                 }
             })
-            t.append(cl);
+            t.prepend(cl);
         },
         addElement: function(parent, element) {
             var tr = $('<tr>');
@@ -829,16 +876,101 @@ window.diving = dvn=diving;
                 }
             }
         },
+        createEditor:function(e,element,td,tr,schemaModel){
+            var editorDiv = $('<div>',{id:"edit_"+e.field});
+            td[0].setAttribute('valOrg',element[e.field]);
+            td.empty();
+            td.append(editorDiv);
+            editorDiv.divText({
+                type:schemaModel.type,
+                value:element[e.field],
+                text:element[e.field],
+                change:function(edText){
+                    var t = $('#edit_'+e.field).data('divText');
+                    element[e.field]=(schemaModel.type=='number')?parseFloat(""+t.getValue()):t.getValue();
+                },
+                keyup:function(edtText){
+                    var t = $('#edit_'+e.field).data('divText');
+                    element[e.field]=(schemaModel.type=='number')?parseFloat(""+t.getValue()):t.getValue();
+                    if( t.key == 'Enter' ){
+                        td.empty();
+                        td.text(element[e.field]);
+                        td.removeAttr("editing");
+                        td.removeAttr("valOrg");
+                    }
+                    if(t.key == 'Escape'){
+                        element[e.field]=(schemaModel.type=='number')?parseFloat(""+td.attr('valOrg')):td.attr('valOrg');
+                        td.empty();
+                        td.text(element[e.field]);
+                        td.removeAttr("editing");
+                        td.removeAttr("valOrg");
+                    }
+                }
+            });
+            editorDiv.find('input')[0].focus();
+        },
         createRow: function(e,element,td,tr){
             if (e.hasOwnProperty('columns')) {
                 e.columns.forEach((x) => widget.createRow(x, element, td, tr));
             } else {
+                let fieldData = element[e.field];
+                let schemaModel = widget.dataSource?.options?.schema?.model?.fields?.[e.field];
+                var tsWgt = widget;
                 let td = $('<td>');
-                const fieldData = element[e.field];
-                const schemaModel = widget.dataSource?.options?.schema?.model?.fields?.[e.field];
+                if(e.hasOwnProperty('editor')){
+                    td[0].onclick=function(evt){
+                        if(!td.attr('editing')){
+                            evt.preventDefault();
+                            td.empty();
+                            e.editor(td,{field:e.field,value:element[e.field],model:element});
+                            if(td[0].innerHTML.length ==0 ){
+                                widget.createEditor(e,element,td,tr,schemaModel);
+                            }
+                            td.attr('editing','1');
+                        }
+                    }
+                    td[0].addEventListener('focusout', function() {
+                        td.empty();
+                        td.text(element[e.field]);
+                        td.removeAttr("editing");
+                    });
+                }
+                for(var c=0;c<this.columnas.length;c++){
+                    if(this.columnas[c].field == e.field){
+                        if(this.columnas[c].hasOwnProperty('width')){
+                            td[0].setAttribute('style','width:'+diving.addPx(this.columnas[c].width)+";");
+                        }
+                    }
+                }
                 if (!e.hasOwnProperty('format')) {
-                    
-                    td.text(diving.normalizeText(fieldData));
+                    if(e.hasOwnProperty('template')){
+                        td.text(diving.template(e.template, element));
+                    }else if(e.hasOwnProperty('command')){
+                        var btn = $('<div>');
+                        td.append(btn);
+                        btn.divButton({
+                            icon:{
+                                class:(e.command=='edit')?'icon-document-edit':'icon-clipboard-remove'
+                            },
+                            click:function(){
+                                if( e.command == 'edit'){
+                                }else{
+                                    var _tsd_ =  $($(this).parent()).parent() ;
+                                    var _grs_ = $($($(_tsd_).parent()).parent().parent().parent()).data('divGrid');
+                                    $.each( _grs_.dataSource.options.dataItems ,function(i,v){
+                                        if(v == element){
+                                            _grs_.dataSource.options.dataItems.splice( i ,1);
+                                            return false;
+                                        }
+                                    });
+                                    widget.refresh();
+                                }
+                            }
+                        }).data('divButton');
+
+                    }else{
+                        td.text(diving.normalizeText(fieldData));
+                    }
                 } else if (schemaModel) {
                     const fieldType = schemaModel.type;
                     if (fieldType === 'date') {
@@ -856,26 +988,28 @@ window.diving = dvn=diving;
                 tr.append(td);
             }
         },
-        createHeader: function(parent, element, colId,th,rdx) {
+        createHeader: function(parent, element, colId,th,rdx,w) {
             if (!element.hasOwnProperty('columns')) {
+
                 var tdh = $('<th>', {
                     'd-index': widget.rdIndex,
-                    text: element.title,
+                    text: element.title||(element.hasOwnProperty('command')?(element.command=='edit'?'EDITAR':'REMOVER'):''),
                     col: colId,
-                    field: element.field
+                    field: element.field||''
+                    ,width: (element.hasOwnProperty('command')?diving.addPx(100):w)
                 });
                 parent.append(tdh);
                 if (element.hasOwnProperty('sortable')) {
                     if (element.sortable) {
                         var em = $('<em>', {
-                            class: 'icon-sort-alpha-asc1'
+                            class: 'icon-sort-alpha-desc1'
                         });
-                        th.append(em);
-                        th.click(function() {
+                        tdh.append(em);
+                        tdh.click(function() {
                             var d = parent.parent().parent().parent();
                             var dg = d.data('divGrid');
                             var field = $(this).attr('field');
-                            if (em.hasClass('icon-sort-alpha-asc1')) {
+                            if (em.hasClass('icon-sort-alpha-desc1')) {
                                 dg.dataSource.sort({
                                     field: field
                                 });
@@ -885,10 +1019,7 @@ window.diving = dvn=diving;
                                     dir: 'desc'
                                 });
                             }
-                            widget.tbody.empty();
-                            $.each(dg.dataSource.elements, function(i, v) {
-                                widget.addElement(widget.tbody, v);
-                            });
+                            widget.refresh();
                             em.toggleClass('icon-sort-alpha-desc1');
                             em.toggleClass('icon-sort-alpha-asc1')
                         });
@@ -933,12 +1064,20 @@ window.diving = dvn=diving;
                     var c = document.createElement('col');
                     var cId = 'dGrid-' + '4-0-1-' + ("" + Math.random()).replace(/\D/g, "");
                     c.setAttribute('id', cId);
+                    console.log( element.columns[i] );
                     cl.append(c);
-                    widget.createHeader(trh, v, cId,th,(rdx+1));
+                    widget.createHeader(trh, v, cId,th,(rdx+1),col);
                 }
                 $(widget.thead).parent().append(cl);
             }
             widget.rdIndex ++;
+        },
+        refresh:function(){
+            widget.tbody.empty();
+            var dg = $($(widget.tbody).parent().parent()).data('divGrid');
+            $.each(dg.dataSource.options.dataItems, function(i, v) {
+                widget.addElement(widget.tbody, v);
+            });
         }
     };
     diving.widget(widget);
@@ -1386,11 +1525,6 @@ window.diving = dvn=diving;
         diving.widget(widget);
     })();*/
 
-
-
-
-
-
 /*Accordion*/
 (function() {
     var widget = {
@@ -1531,9 +1665,14 @@ window.diving = dvn=diving;
                             };
             var editor = CodeMirror.fromTextArea(area,{
                 mode: p.mode||optionMode,
-                selectionPointer:true,
+                //selectionPointer:true,
                 lineNumbers:true,
-                extraKeys:p.keys
+                extraKeys:p.keys,
+                foldGutter:true,
+                gutters:['CodeMirror-linenumbers','CodeMirror-foldgutter'],
+                matcTags:{bothTags:true},
+                indentUnit:5,
+                highlightSelectionMatches: {showToken: /\w/, annotateScrollbar: true}
             });
             data['editor'] = editor;
             editor.on('change',function(e){
@@ -1543,55 +1682,53 @@ window.diving = dvn=diving;
     };
     diving.widget(widget);
 })();
-
 class Source {
-    constructor(p) {
-        this.options={};
-        if(p.schema?.model?.fields!=undefined){
-            this.options = {schema: {model: {fields: (p.schema?.model?.fields) || {}}}};
-        }
-        this.setData(p.data);
-        if (p.group) this.group(p.group);
-        if (p.sort) this.sort(p.sort);
-        if (p.aggregate) this.aggregate(p.aggregate, this.options);
-        return this;
-    }
-    aggregate(a, c) {
-        const data = c.data?.[0]?.items ? c.data.map(item => item.items) : c.data || c;
-        if (!data) return;
-        Object.entries(a).forEach(([key, { field }]) => {
-            const total = data.reduce((sum, item) => sum + item[field], 0);
-            data.forEach(item => {
-                item[`aggregate_${key}`] = key === 'avg' ? item[field] / total : total;
-            });
-        });
-    }
-    setData(data) {
-        this.options.data = {
-            dataItems:data.map(item => {
-                const fields = this.options?.schema?.model?.fields||{};
-                for (const [key, field] of Object.entries(fields)) {
-                    if (field.type === 'number') item[key] = parseFloat(item[key]);
-                    else if (field.type === 'date') item[key] = new Date(item[key]);
-                    else if (field.type === 'string') item[key] = String(item[key]);
-                }
-                return item;
-            })
-        };
-    }
-    view() {return this.options.data.dataItems;}
-    group(p) {this.options.data.dataItems = diving.group(this.options.data.dataItems, p);}
-    sort(order) {
-        const orders = Array.isArray(order) ? order : [order];
-        this.options.data.dataItems.sort((a, b) => {
-            for (const { field, dir } of orders) {
-                const direction = dir === 'desc' ? -1 : 1;
-                if (a[field] > b[field]) return direction;
-                if (a[field] < b[field]) return -direction;
-            }
-            return 0;
-        });
-    }
+     constructor(p) {
+          this.options={};
+          if(p.schema?.model?.fields!=undefined){
+               this.options = {schema: {model: {fields: (p.schema?.model?.fields) || {}}}};
+          }
+          this.setData(p.data);
+          if (p.group) this.group(p.group);
+          if (p.sort) this.sort(p.sort);
+          if (p.aggregate) this.aggregate(p.aggregate, this.options);
+          return this;
+     }
+     aggregate(a, c) {
+          const data = c.data?.[0]?.items ? c.data.map(item => item.items) : c.data || c;
+          if (!data) return;
+          Object.entries(a).forEach(([key, { field }]) => {
+               const total = data.reduce((sum, item) => sum + item[field], 0);
+               data.forEach(item => {
+                    item[`aggregate_${key}`] = key === 'avg' ? item[field] / total : total;
+               });
+          });
+     }
+     setData(data) {
+          this.options.dataItems=data.map(item => {
+                    const fields = this.options?.schema?.model?.fields||{};
+                    for (const [key, field] of Object.entries(fields)) {
+                         if (field.type === 'number') item[key] = parseFloat(item[key]);
+                         else if (field.type === 'date') item[key] = new Date(item[key]);
+                         else if (field.type === 'string') item[key] = String(item[key]);
+                    }
+                    return item;
+               });
+     }
+     view() {return this.options.dataItems;}
+     group(p) {this.options['dataItems'] = diving.group(this.options.dataItems, p);}
+     sort(order) {
+          const orders = Array.isArray(order) ? order : [order];
+          this.options.dataItems.sort((a, b) => {
+               for (const { field, dir } of orders) {
+                    const direction = dir === 'desc' ? -1 : 1;
+                    if (a[field] > b[field]) return direction;
+                    if (a[field] < b[field]) return -direction;
+               }
+               return 0;
+          });
+     }
 }
 diving.data = diving.data || {};
 diving.data.DataSource = Source;
+

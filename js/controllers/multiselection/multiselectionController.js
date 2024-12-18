@@ -1,5 +1,5 @@
 /*Multiselects*/
-var dtsMulti = [];
+/*var dtsMulti = [];
 $.each(rtn,function(i,v){
     dtsMulti.push({VALUE:v.ID,MENSAJE:v.CATEGORIA});
 });
@@ -23,4 +23,42 @@ $('#multiSelection').divMultiSelect({
         console.log( mdts.itemsSelected );
         console.log( mdts.val() );
     }
+});*/
+
+
+
+$('#config').divListView({
+    elements:[
+        {text:'Configuracion',elements:[
+            {text:'DataSource basico',href:'/pages/MultiSelect/Config/arreglo.html'},
+            {text:'DataSource',href:'/pages/MultiSelect/Config/dataSource.html'},
+            {text:'DataTextField',href:'/pages/MultiSelect/Config/dataTextField.html'},
+            {text:'DataValueField',href:'/pages/MultiSelect/Config/dataValueField.html'}
+        ]},
+        {text:'Eventos',elements:[
+            {text:'Select',href:'/pages/MultiSelect/Config/selected.html'},
+            {text:'Change',href:'/pages/MultiSelect/Config/change.html'}
+        ]}
+    ],
+    openTo:'#salidaCofig',
+    class:'list-group-flush',
+    click:function(){
+        var d = $('#config').data('divListView');
+        var c = d.selected;
+        $.each(d.items,function(i,v){
+            $(v).removeClass('list-group-item-info');
+        });
+        $(this).addClass('list-group-item-info');
+        if(d.openTo!=null){
+             $( d.openTo ).load(
+                (c.href.startsWith('http')?
+                c.href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + c.href
+                )
+            );
+        }
+    }
 });
+
+$('#salidaCofig').load('pages/MultiSelect/Config/dataSource.html');
+

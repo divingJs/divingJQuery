@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+     <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>diving</title>
+          <link rel="stylesheet" href="css/diving-4.0.1.css">
+          <link  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"    rel="stylesheet">
+          
+          <script src="js/jquery-3.7.1.js"></script>
+          <script type="text/javascript" d-role="d-editor-script" src="js/diving-4.0.1.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" ></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" 	></script>
+     </head>
+     <body>
+		<style >
+               .contentGrid{overflow:hidden;overflow-x: scroll;}
+               #grid{width: 3000px;}
+          </style>
+
+		<div class="container-fluid">
+             <div class="row">
+                  <div class="col-sm-12">
+                       <div class="contentGrid">
+                            <div id="grid"></div>
+                       </div>
+                  </div>
+             </div>
+          </div>
+          
+          <script type="text/javascript">
+
+               var opj = {
+                    dynamic: 'http://192.168.1.34:8080/sipco_dinamic_service/consultas/getValues/',
+                    call: function (package, params, callback) {
+                         $.ajax({
+                              url: opj.dynamic + package,
+                              type: 'POST',
+                              dataType: 'json',
+                              contentType: 'application/json',
+                              data: JSON.stringify(params)
+                         }).done(function (respuesta) {
+                              callback(respuesta);
+                         });
+                    },
+                    prmts:{
+                         IN_ATRD_CVE_STR : '-1',
+                         IN_AREA_GEN_STR : '-1',
+                         IN_PRVED_STR    : '-1',
+                         IN_ID_ART_STR   : '-1',
+                         IN_OC_NUM_STR   : '-1',
+                         IN_STATUS_STR   : '-1',
+                         IN_FEC_INI      : '-1',
+                         IN_FEC_FIN      : '-1',
+                    },
+                    infoGrid: null,
+                    prevRuta:'../../../repo-sipco'
+               };
+
+               opj.call('GET_REPO_MULTAS',[opj.prmts],function(rtn){
+
+
+                    var dts = new dvn.data.DataSource({
+                         data: rtn,
+                         schema:{
+                              model:{
+                                   fields:{
+                                        MUL_CVE_N          :{type:'number'},
+                                        EJECUTIVO_STR      :{type:'string'},
+                                        ATRD_DESC_STR      :{type:'string'},
+                                        ID_ART             :{type:'string'},
+                                        MAR_CVE_N          :{type:'number'},
+                                        AR_ESTILO_STR      :{type:'string'},
+                                        COL_DESC_STR       :{type:'string'},
+                                        OC_NUM_N           :{type:'number'},
+                                        MUL_FEC_DT         :{type:'string'},
+                                        CAT_INC_CLASIF_STR :{type:'string'},
+                                        MUL_OBS_STR        :{type:'string'},
+                                        EM_FCEDIS_DT       :{type:'string'},
+                                        OCD_CANT_N         :{type:'number'},
+                                        OCD_COSTO_N        :{type:'number'},
+                                        MUL_CANT_N         :{type:'number'},
+                                        MUL_MONTO_N        :{type:'number'},
+                                        MUL_COSTO_EXT_N    :{type:'number'},
+                                        TOTAL_MULTA_N      :{type:'number'},
+                                        MUL_MONTO_NEG_N    :{type:'number'},
+                                        MUL_MOT_CAM_STR    :{type:'string'},
+                                        MUL_IMPBLE_N       :{type:'number'},
+                                        MUL_FEC_AUTORIZADA :{type:'string'},
+                                        MUL_USR_AUT_STR    :{type:'string'},
+                                        SOL_NUM_N          :{type:'number'},
+                                        SOL_FEC_PAG_DT     :{type:'string'}
+                                   }
+                              }
+                         }
+                    });
+                    var gr = $('#grid').divGrid({
+                         dataSource:dts,
+                         scrollable:true,
+                         height: "500px",
+                         editable:'inline',
+                         columns:[
+                              {command:'edit'},
+                              {command:'delete'},
+          				{field:'MUL_CVE_N'         , width: 100, title:'FOLIO'},
+          				{field:'EJECUTIVO_STR'     , width: 350, title:'EJECUTIVO'},
+          				{field:'ATRD_DESC_STR'     , width: 350, title:'AREA RESPONSABLE',template:function(e){return e.ATRD_DESC_STR.toUpperCase();}},
+          				{field:'ID_ART'            , width: 100, title:'ARTICULO'},
+          				{field:'MAR_CVE_N'         , width: 200, title:'PROVEEDOR'},
+          				{field:'AR_ESTILO_STR'     , width: 100, title:'ESTILO'},
+          				{field:'COL_DESC_STR'      , width: 200, title:'COLOR'},
+          				{field:'OC_NUM_N'          , width: 200, title:'ORDEN COMPRA'},
+          				{field:'MUL_FEC_DT'        , width: 200, title:'FECHA DE REGISTRO', format:'{0:dd/MM/yyyy}'},
+          				{field:'CAT_INC_CLASIF_STR', width: 100, title:'INCIDENCIA'},
+          				{field:'MUL_OBS_STR'       , width: 450, title:'DESCRIPCION INCIDENCIA'},
+          				{field:'EM_FCEDIS_DT'      , width: 200, title:'FECHA DE LLEGADA', format:'{0:dd/MM/yyyy}'},
+          				{field:'OCD_CANT_N'        , width: 200, title:'PIEZAS TOTALES RECIBIDAS'},//
+          				{field:'OCD_COSTO_N'       , width: 200, title:'COSTO FOB'              , format:'{0:c2}'},
+          				{field:'MUL_CANT_N'        , width: 200, title:'TOTAL PIEZAS CON DEFECTO'},
+          				{field:'MUL_MONTO_N'       , width: 200, title:'PRECIO REHABILITACION'  , format:'{0:c2}'},
+          				{field:'MUL_COSTO_EXT_N'   , width: 200, title:'EXTRA COSTO MATERIALES' , format:'{0:c2}'},
+          				{field:'TOTAL_MULTA_N'     , width: 200, title:'TOTAL MULTA'},
+          				{field:'MUL_MONTO_NEG_N'   , width: 200, title:'TOTAL NOGOCIADO DG'},
+          				{field:'MUL_MOT_CAM_STR'   , width: 200, title:'MOTIVO CAMBIO'},
+          				{field:'MUL_IMPBLE_N'      , width: 200, title:'IMPUTABLE NO IMPUTABLE', template:'#=(MUL_IMPBLE_N=1)?"SI":"NO"#'},
+          				{field:'MUL_FEC_AUTORIZADA', width: 200, title:'FECHA AUTORIZACION'},
+          				{field:'MUL_USR_AUT_STR'   , width: 250, title:'AUTORIZO'},
+          				{field:'SOL_NUM_N'         , width: 200, title:'SOLICITUD COBRADA'},
+          				{field:'SOL_FEC_PAG_DT'    , width: 200, title:'FECHA DE PAGO', format:'{0:dd/MM/yyyy}'}
+     				]
+                    });
+
+
+               });
+          </script>
+     </body>
+</html>
