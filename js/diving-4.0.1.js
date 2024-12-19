@@ -950,20 +950,22 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                         td.append(btn);
                         btn.divButton({
                             icon:{
-                                class:(e.command=='edit')?'icon-document-edit':'icon-clipboard-remove'
+                                class:(e.command=='edit')?'icon-edit11':'icon-remove_circle_outline'
                             },
+                            type:(e.command=='edit')?'info':'danger',
                             click:function(){
+                                var _tsd_ =  $($(this).parent()).parent().parent() ;
+                                var _grs_ = $($($(_tsd_).parent()).parent().parent()).data('divGrid');
                                 if( e.command == 'edit'){
+
                                 }else{
-                                    var _tsd_ =  $($(this).parent()).parent() ;
-                                    var _grs_ = $($($(_tsd_).parent()).parent().parent().parent()).data('divGrid');
                                     $.each( _grs_.dataSource.options.dataItems ,function(i,v){
                                         if(v == element){
+                                            _tsd_.remove();
                                             _grs_.dataSource.options.dataItems.splice( i ,1);
                                             return false;
                                         }
                                     });
-                                    widget.refresh();
                                 }
                             }
                         }).data('divButton');
@@ -1615,6 +1617,53 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
     };
     diving.widget(widget);
 })();
+
+
+
+
+
+/*notifications*/
+(function(){
+    var widget = {
+        name: "Notification",
+        init: function(prm) {
+            prm=$.extend(prm,{
+                class:"d-notification alert "+((prm.type!=undefined)?(prm.type.startsWith('alert')?prm.type:'alert-'+prm.type):'alert-primary')
+            });
+            var widtgetData = {
+                elem:$(this)[0],
+                role:'alert'
+            };
+            widget.createElement(prm,widtgetData);
+            $(this).data('div'+widget.name, widtgetData);
+            return $(this);
+        },
+        createElement: function(p,data) {
+            $(data.elem).empty();
+
+            var _al_   =    $('<div>',{class:p.class,role:data.role});
+            var _cnt_ = $('<div>');
+                _al_.append(_cnt_.append(p.text));
+            $(data.elem).append(_al_);
+
+            if(p.hasOwnProperty('icon')){
+                var _emIcon_ = $('<em>',{class:p.icon.class});
+                if(p.icon.dir=='left'){
+                    _al_.prepend(_emIcon_);
+                    _emIcon_[0].setAttribute('style','font-size:xxx-large;position:absolute;');
+                    _emIcon_[0].nextSibling.setAttribute('style','margin-left:4em;text-align: left;');
+                }else{
+                    _al_.append(_emIcon_);
+                    _emIcon_[0].setAttribute('style','font-size:xxx-large;position: absolute;right: 0.5em;top: 0.5em;');
+                    _emIcon_[0].previousElementSibling.setAttribute('style','margin-right:4em;text-align: right;');
+                }
+            }
+
+        }
+    };
+    diving.widget(widget);
+})();
+
 
 
 

@@ -8,6 +8,7 @@ $('#menu').divListView({
         {text:'Grid'        , href:'/pages/Grid/index.html'},
         {text:'ListView'    , href:'/pages/ListView/index.html'},
         {text:'MultiSelect' , href:'/pages/MultiSelect/index.html'},
+        {text:'Notification' , href:'/pages/Notification/index.html'},
         {text:'RadioButton' , href:'/pages/RadioButton/index.html'},
         {text:'Tabstrip'    , href:'/pages/TabsTrip/index.html'},
         {text:'Text'        , href:'/pages/Text/index.html'}
