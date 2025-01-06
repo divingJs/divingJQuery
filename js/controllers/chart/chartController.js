@@ -15,13 +15,13 @@ new Chart("myChart", {
     labels: xValues,
     datasets: [{
       //backgroundColor:"rgba(0,0,255,1.0)",
-      borderColor: "rgba(0,0,255,0.1)",
+      //borderColor: "rgba(0,0,255,0.1)",
       data: yValues
     }]
   },
   options: {
-    label: 'My Chart'
-    /*legend: {display: false},
+    label: 'My Chart'/*,
+    legend: {display: false},
     scales: {
       xAxes: [{ticks: {min: 40, max:160}}],
       yAxes: [{ticks: {min: 6, max:16}}],

@@ -1,0 +1,115 @@
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<textarea type="text" id="codigo">
+					</textarea>
+				</div>
+				<div class="col-sm-12" id="sd">
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<template id="tmp">
+
+
+	<div class="d-article">
+		<div class="d-article-section">
+			<p>
+				remueve los elementos que se requieran en tiempo real
+			</p>
+			<b>remove(1)</b> : por indice que va de 0 a n<br />
+			<b>remove({text:'uno'})</b> : por texto que se esta mostrando.
+		</div>
+	</div>
+
+
+    <div class="d-article">
+      <div class="d-article-section">
+        <div id="radios_1"></div>
+      </div>
+    </div>
+    <div class="d-article">
+      <div class="d-article-section">
+        <div id="radios_2"></div>
+
+      </div>
+    </div>
+    <script type="text/javascript">
+      $('#radios_1').divRadioButton({
+        items:[{text:'uno'    , value:'uno'},
+               {text:'dos'    , value:'dos'},
+               {text:'tres'   , value:'tres'},
+               {text:'cuatro' , value:'cuatro'}
+              ],
+        dir:'left'
+      });
+      var rdb1 = $('#radios_1').data('divRadioButton');
+      rdb1.remove(2);
+
+
+      $('#radios_2').divRadioButton({
+        items:[{text:'uno'    , value:'uno'},
+               {text:'dos'    , value:'dos'},
+               {text:'tres'   , value:'tres'},
+               {text:'cuatro' , value:'cuatro'}
+              ],
+        dir:'left'
+      });
+      var rdb2 = $('#radios_2').data('divRadioButton');
+      rdb2.remove({text:'dos'});
+    </script>
+
+</template>
+
+<script type="text/javascript">
+	var area = document.getElementById("codigo");
+	var b = $('#tmp')[0].innerHTML;
+	area.value=vle+b+"\n</body>\n</html>";
+	var opj={
+		value : vle+b+"\n</body>\n</html>"
+	};
+	var editor = CodeMirror.fromTextArea(area, {
+	mode: myModeSpec,
+	selectionPointer: true,
+	lineNumbers: true,
+	extraKeys: {
+		"Ctrl-Enter":function(e){
+			create('salida',opj.value);
+		}
+	}
+	});
+	editor.on('change',function(e){
+		opj.value = editor.getValue();
+	});
+	create('salida',vle+b+"\n</body>\n</html>");
+
+	$('#btnConfig').click(function(){
+		$(this).toggleClass('icon-navigate_nextchevron_right');
+		$('#menuConfig').toggleClass('d-hidden');
+		$('#salidaCofing').toggleClass('col-sm-12');
+		$('#salidaCofing').toggleClass('col-sm-8');
+		$('#en').toggleClass('col-sm-12');
+		$('#sd').toggleClass('col-sm-12');
+		$('#en').toggleClass('col-sm-6');
+		$('#sd').toggleClass('col-sm-6');
+
+	});
+</script>

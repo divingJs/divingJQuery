@@ -311,7 +311,6 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
      };
      diving.widget(widget);
 })();
-
 /*textbox*/
 (function() {
     var widget = {
@@ -557,26 +556,69 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                 class:'d-radioButton'
             });
             var widtgetData={
+                add:function(e){
+                    var a = $(this.element).data('divRadioButton');
+                    var wgt = this;
+                    var prm = a._prm;
+                    wgt.items.push(e);
+                    wgt.value = [];
+                    wgt._crtElm(prm,wgt);
+                },
+                remove:function(e){
+                    var a = $(this.element).data('divRadioButton');
+                    var wgt = this;
+                    var prm = a._prm;
+                    if(typeof e == 'number'){
+                        var vle = null;
+                        for(var i = 0; i < wgt.items.length; i ++){
+                            if(i==e){
+                               vle = wgt.items[i].value;
+                            }
+                        }
+                        wgt.items.splice(e,1);
+                    }else{
+                        var x = -1;
+                        var vle = null;
+                        $.each(wgt.items,function(i,v){
+                            if(v.text == e.text){
+                                x= i;
+                                vle = v.value;
+                            }
+                        });
+                        if(x>-1){
+                            wgt.items.splice(x,1);
+                        }
+                    }
+                    wgt._crtElm(prm,wgt);
+                },
                 setText:function(t){
-                    $(this.elm).find('label').text(t);
+                    $(this.element).find('label').text(t);
                 },
                 getValue:function(){
                     return this.value;
                 },
-                elm:$(this)[0],
+                destroy:function(){
+                    $(this.element).removeData('div'+widget.name);
+                    $(this.element)[0].remove();
+                },
+                element:$(this)[0],
                 value:null,
                 items:prm.items||[],
                 icon:prm.icon||{}
             };
+
+            widtgetData['_prm']=prm;
+            widtgetData['_crtElm']=widget.createElement;
             delete prm.items;
             delete prm.icon;
             widget.createElement(prm,widtgetData);
             $(this).data('div'+widget.name,widtgetData);
+            return $(this);
         },
         createElement:function(p,d){
-            $(d.elm).empty();
+            $(d.element).empty();
             $.each(d.items,function(i,v){
-                v['id']=$(d.elm).attr('id');
+                v['id']=$(d.element).attr('id');
                 var impt = $('<input>',{
                     value:v.value,
                     type: 'radio',
@@ -646,11 +688,27 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                     id:'prnt_'+(i+1)+'_'+v.id,
                     class:'d-parent-radioButton'+(p.hasOwnProperty('dir')?' d-rb-'+p.dir:'')
                 });
-                $(d.elm).append(
+                $(d.element).append(
                     cntDiv.append(impt)
                         .append(rbIcon)
                         .append(lbl)
                 );
+
+                if(v.hasOwnProperty('checked')){
+                    impt[0].checked = true;
+                    d.value = $('#'+(i+1)+'_'+v.id)[0].value;
+                    $('#'+(i+1)+'_'+v.id).parent().toggleClass('d-chk-selected');
+                    if(d.icon.hasOwnProperty('checked')){
+                        var iconId = $('#'+(i+1)+'_icon_'+v.id);
+                        if(iconId.hasClass(d.icon.checked)){
+                            iconId.removeClass(d.icon.checked);
+                            iconId.addClass(d.icon.unchecked);
+                        }else{
+                            iconId.removeClass(d.icon.unchecked);
+                            iconId.addClass(d.icon.checked);
+                        }
+                    };
+                }
             });
         }
     };
@@ -670,13 +728,24 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                 selected:null,
                 openTo: prm.openTo||null,
                 click:prm.click||null,
-                items:[]
+                items:[],
+                addElement:function(o){
+                    widget.adElement($(this.elem)[0].firstChild,o,this);
+                },
+                remove:function(o){
+                    var x=(typeof o == 'object')?this.elements.findIndex(item => item.text == o.text):o;
+                    this.elements.slice(x,1);
+                    this.items.slice(x,1);
+                    var ul = $(this.elem)[0].firstChild;
+                    ul.removeChild(ul.children[x]);
+                }
             };
             delete prm.elements;
             delete prm.openTo;
             delete prm.click;
             widget.createElement(prm,widtgetData);
             $(this).data('div'+widget.name, widtgetData);
+            return $(this);
         },
         createElement: function(p,d) {
             $(d.elem).empty();
@@ -685,10 +754,10 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
             var wst = this;
             $(d.elem).append( ul );
             $.each(d.elements,function(i,v){
-                wst.add(ul,v, d);
+                wst.adElement(ul,v, d);
             });
         },
-        add:function(e,c,d){
+        adElement:function(e,c,d){
             var li = document.createElement('li');
             d.items.push(li);
             $(li).addClass('list-group-item');
@@ -699,6 +768,7 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                 $(li).append(
                     $('<em>',{
                         class:'icon-arrow_right',
+                        style:'cursor:pointer;',
                         click:function(){
                             $(this).toggleClass('icon-arrow_right');
                             $(this).toggleClass('icon-arrow_drop_down');
@@ -711,11 +781,23 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                 $(li).append(ul);
                 var wst = this;
                 $.each(c.elements,function(i,v){
-                    wst.add(ul,v, d);
+                    wst.adElement(ul,v, d);
                 });
             }else{
                 $(li).text(c.text);
                 $(li).click(function(){
+                    var _lis = [];
+                    var _e=$(e);
+                    while(_e.parent()[0].tagName=='LI' || _e.parent()[0].tagName=='UL'){
+                        _e = _e.parent();
+                    }
+                    _lis = _e.parent().find('li');
+                    $.each(_lis,function(i,v){
+                        $(v).removeClass('active');
+                    });
+
+                    $(this).addClass('active');
+                    
                     d.selected = c;
                     if(d.click != null){
                         $(li).click.constructor = d.click;
@@ -1526,7 +1608,6 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
         };
         diving.widget(widget);
     })();*/
-
 /*Accordion*/
 (function() {
     var widget = {
@@ -1617,23 +1698,30 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
     };
     diving.widget(widget);
 })();
-
-
-
-
-
-/*notifications*/
+/*alerts*/
 (function(){
     var widget = {
-        name: "Notification",
+        name: "Alert",
         init: function(prm) {
             prm=$.extend(prm,{
-                class:"d-notification alert "+((prm.type!=undefined)?(prm.type.startsWith('alert')?prm.type:'alert-'+prm.type):'alert-primary')
+                class:"d-alert alert "+
+                        ((prm.type!=undefined)?(prm.type.startsWith('alert')?prm.type:'alert-'+prm.type):'alert-primary')+
+                        (' '+prm.class||'')
             });
             var widtgetData = {
                 elem:$(this)[0],
-                role:'alert'
+                role:'alert',
+                close:prm.close||false,
+                closeTime:function(t){
+                    var a = $(this.elem);
+                    setTimeout(function(){
+                        var _a_=a.find('.alert')[0];
+                        let alert = new bootstrap.Alert(_a_);
+                        alert.close();
+                    },t);
+                }
             };
+            delete prm.close;
             widget.createElement(prm,widtgetData);
             $(this).data('div'+widget.name, widtgetData);
             return $(this);
@@ -1658,17 +1746,18 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                     _emIcon_[0].previousElementSibling.setAttribute('style','margin-right:4em;text-align: right;');
                 }
             }
-
+            if(data.close){
+                _al_.addClass('alert-dismissible fade show');
+                _al_.append($('<button>',{type:'button',class:'btn-close','data-bs-dismiss':'alert','arial-label':'close'}));
+                var alertList = document.querySelectorAll('.alert');
+                alertList.forEach(function (alert) {
+                  new bootstrap.Alert(alert);
+                });
+            }
         }
     };
     diving.widget(widget);
 })();
-
-
-
-
-
-
 /*Coding*/
 (function() {
     var widget = {
@@ -1780,4 +1869,104 @@ class Source {
 }
 diving.data = diving.data || {};
 diving.data.DataSource = Source;
+/*Confirmation*/
+(function(){
+    var widget = {
+        name: "Confirmation",
+        init: function(prm) {
+            var _cls = prm.class||'';
+            delete prm.class;
+            prm=$.extend(prm,{
+                class:"d-alert modal fade "
+            });
+            var widtgetData = {
+                element:$(this)[0],
+                _modal:null,
+                class:(' '+_cls||''),
+                open:function(){
+                    this._modal.show();
+                },
+                close:function(){
+                    this._modal.toggle();
+                },
+                destroy: function() {
+                    this._modal.toggle();
+                    $(this.element).removeData('div' + widget.name);
+                    $(this.element)[0].remove();
+                }
+            };
+            widget.createElement(prm,widtgetData);
+            $(this).data('div'+widget.name, widtgetData);
+            return $(this);
+        },
+        createElement: function(p,data) {
+            $(data.element).empty();
+            var _cnt_ = $('<div>',{
+                class:p.class,
+                'data-bs-backdrop':"static",
+                'data-bs-keyboard':"false",
+                tabindex:"-1",
+                'aria-labelledby':"staticBackdropLabel",
+                'aria-hidden':"true"
+            });
+            $(data.element).append(_cnt_);
+            this.createEstructure(_cnt_,$(data.element)[0].id);
+            
+            $(_cnt_.find('.modal-content')[0]).addClass(data.class);
+            
+            if(p.hasOwnProperty('title')){
+                _cnt_.find('#'+$(data.element)[0].id+'_ttl_modal')[0].append(p.title);
+            }
 
+            if(typeof p.text == "object" ){
+                _cnt_.find('#'+$(data.element)[0].id+'_bdy_modal')[0].append(p.text[0].innerHTML);
+            }else{
+                _cnt_.find('#'+$(data.element)[0].id+'_bdy_modal')[0].append(p.text);
+            }
+            $('#'+$(data.element)[0].id+'_btn_mdl_a').divButton({
+                text:'ACEPTAR',
+                type:'success',
+                click:function(){
+                    if(p.hasOwnProperty('acept')){
+                        p.acept.constructor = this.click;
+                        p.acept();
+                    }
+                }
+            });
+            $('#'+$(data.element)[0].id+'_btn_mdl_c').divButton({
+                text:'CANCEL',
+                type: 'danger',
+                click:function(){
+                    if(p.hasOwnProperty('cancel')){
+                        p.cancel.constructor = this.click;
+                        p.cancel();
+                    }
+                }
+            });
+            $(data.element).append(_cnt_);
+            data._modal= new bootstrap.Modal(document.getElementById($(data.element)[0].id).firstChild, {
+                keyboard: false
+            });
+        },
+        createEstructure(cnt,id){
+            cnt.append(
+                $('<div>',{class:'modal-dialog'}).append(
+                    $('<div>',{class:'modal-content'}).append(
+                        $('<div>',{class:'modal-header'}).append(
+                            $('<div>',{class:'modal-title',id:id+'_ttl_modal'})
+                        )
+                    ).append(
+                        $('<div>',{class:'modal-body',id:id+'_bdy_modal'})
+                    ).append(
+                        $('<div>',{class:'modal-footer'}).append(
+                            $('<div>',{id:id+'_btn_mdl_c'})
+                        ).append(
+                            $('<div>',{id:id+'_btn_mdl_a'})
+                        )
+                    )
+                )
+            );
+        }
+    };
+    diving.widget(widget);
+})();

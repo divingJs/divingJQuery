@@ -1,0 +1,87 @@
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<div id="cdg"></div>
+					<!--
+						<textarea type="text" id="codigo"></textarea>
+					-->
+				</div>
+				<div class="col-sm-12" id="sd">
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+
+<template id="tmp">
+	<div class="d-article">
+		<div class="d-article-section">
+			<p>
+				La creacion de checkbox con su accion y lectura de elementos seleccionados de una manera sencilla
+			</p>
+			<b>items</b> cada item es un elemento que formara un checkbox<br>
+			<b>text</b> texto a mostrar<br>
+			<b>value</b> valor a obtener una vez seleccionado el checkbox
+
+		</div>
+	</div>
+	<div id="radios"></div>
+	<div id="btnDestroy"></div>
+	<script type="text/javascript">
+		$('#radios').divRadioButton({
+		    items:[{text:' uno'    , value:'uno'},
+		           {text:' dos'    , value:'dos'},
+		           {text:' tres'   , value:'tres'},
+		           {text:' cuatro' , value:'cuatro'}
+		          ]
+		});
+		$('#btnDestroy').divButton({
+			text:'Aceptar',
+			click:function(){
+				var rdb = $('#radios').data('divRadioButton');
+				rdb.destroy();
+			}
+		})
+	</script>
+</template>
+<script type="text/javascript">
+
+	var b = $('#tmp')[0].innerHTML;
+	var edt = $('#cdg').divCoding({
+		prepend:vle,
+		append:'</body>\n</html>',
+		value:b,
+		keys:{
+			"Ctrl-Enter":function(e){
+				var et=$('#cdg').data('divCoding');
+				create('salida',et.value);
+			}
+		}
+	}).data('divCoding');
+	edt.editor.setSize(null,600);
+	create('salida',vle+b+"\n</body>\n</html>");
+
+
+	$('#btnConfig').click(function(){
+		$(this).toggleClass('icon-navigate_nextchevron_right');
+		$('#menuConfig').toggleClass('d-hidden');
+		$('#salidaCofing').toggleClass('col-sm-12');
+		$('#salidaCofing').toggleClass('col-sm-8');
+		$('#en').toggleClass('col-sm-12');
+		$('#sd').toggleClass('col-sm-12');
+		$('#en').toggleClass('col-sm-6');
+		$('#sd').toggleClass('col-sm-6');
+
+	});
+</script>

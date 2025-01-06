@@ -21,7 +21,10 @@ $('#config').divListView({
             {text:'SubElements',href:'/pages/ListView/Config/subElements.html'}
         ]},
         {text:'Eventos',elements:[
-            {text:'Click',href:'/pages/ListView/Config/click.html'}
+            {text:'Click',href:'/pages/ListView/Config/click.html'},
+            {text:'AddElement',href:'/pages/ListView/Config/addElement.html'},
+            {text:'remove',href:'/pages/ListView/Config/remove.html'},
+            {text:'remove by index',href:'/pages/ListView/Config/removeByIndex.html'}
         ]}
     ],
     openTo:'#salidaCofig',
