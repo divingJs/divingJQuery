@@ -1,0 +1,109 @@
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<div id="cdg"></div>
+				</div>
+				<div class="col-sm-12" id="sd">
+					<div class="row" id="desc">
+						<div class="col-sm-12">
+							<div class="d-article">
+								<div class="d-article-section">
+									<p>Abre una pesta&ntilde;a una vez creado el TabsTrip</p>
+									<ul style="list-style: none;margin:0;padding:0;">
+										<li>
+											<em style="float:left;">open(indice): </em>
+											<div >indica la pesta&ntilde;a que se abrira en el tabstrip por medio del indice</div>
+										</li>
+										<li>
+											<em style="float:left;">open(id): </em>
+											<div >indica la pesta&ntilde;a que se abrira en el tabstrip por medio del identificador</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-11"></div>
+						<div class="col-sm-1">
+							<div id="btnDesc"></div>
+						</div>
+					</div>
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+<template id="tmp">
+	<div id="tabstrip"></div>
+	<script type="text/javascript">
+		var tab = $('#tabstrip').divTabsTrip({
+	        content:[
+	            {title: 'titulo 1', id:'elem_1', element: "Lorem ipsum dolor sit amet, consectetur, adipisicing elit. Eos autem cumque impedit debitis est fuga quod, aliquid dolorum, deleniti, tempora, architecto reprehenderit accusamus provident velit blanditiis unde dignissimos harum recusandae."},
+	            {title: 'titulo 2', id:'elem_2', element: $('<div>',{text:'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatum, accusantium ut commodi. Eius laudantium facere ullam quasi voluptates dolorum, inventore assumenda, non, officia, maiores quisquam debitis? Voluptatem nulla perspiciatis voluptates omnis! Quia facere dolorum explicabo, dicta incidunt aspernatur repellat natus alias magni, minus maxime consequatur debitis quo vitae laborum impedit culpa distinctio unde dolorem ipsum consectetur? Eos ducimus quisquam rerum laborum eum, repellat, quod reiciendis nam ipsum officiis dolorum tempora perspiciatis illum corrupti, tempore voluptates autem ullam assumenda quas. Vero officia, saepe blanditiis labore, dolor, doloribus amet deserunt necessitatibus eius dolore, consequuntur corporis temporibus obcaecati! Voluptatibus eos recusandae alias dicta?'})},
+	            {title: 'titulo 3', id:'elem_3', element: $('<div>',{text:'Ducimus vero corporis nemo cupiditate a autem iusto accusamus provident nesciunt exercitationem esse culpa ipsa dolore sapiente inventore, numquam illum tempore adipisci labore tempora quae quia deserunt reprehenderit unde optio.'})},
+	            {title: 'titulo 4', id:'elem_4', element: $('<div>',{text:'Officia omnis iste cum natus suscipit beatae eos, rerum consequatur, assumenda necessitatibus laboriosam eligendi porro! Sint quia veniam cupiditate quis recusandae possimus est minima dolores laboriosam in, alias saepe illum.'})}
+	        ]
+	    }).data('divTabsTrip');
+	    tab.open(1);
+	</script>
+
+
+</template>
+<script type="text/javascript">
+	
+	
+	var b = $('#tmp')[0].innerHTML;
+	var edt = $('#cdg').divCoding({
+		prepend:vle,
+		append:'</body>\n</html>',
+		value:b,
+		keys:{
+			"Ctrl-Enter":function(e){
+				var et=$('#cdg').data('divCoding');
+				create('salida',et.value);
+			}
+		}
+	}).data('divCoding');
+	edt.editor.setSize(null,600);
+	create('salida',vle+b+"\n</body>\n</html>");
+
+	
+	$('#btnConfig').click(function(){
+		$(this).toggleClass('icon-navigate_nextchevron_right');
+		$('#menuConfig').toggleClass('d-hidden');
+		$('#salidaCofing').toggleClass('col-sm-12');
+		$('#salidaCofing').toggleClass('col-sm-8');
+		$('#en').toggleClass('col-sm-12');
+		$('#sd').toggleClass('col-sm-12');
+		$('#en').toggleClass('col-sm-6');
+		$('#sd').toggleClass('col-sm-6');
+	});
+
+
+
+	$('#btnDesc').divButton({
+		type:'link',
+		icon:{
+			class:'icon-upload7'
+		},
+		click:function(){
+			var btn = $('#btnDesc').data('divButton');
+			btn.toggleClass('icon-upload7');
+			btn.toggleClass('icon-download8');
+			$('#desc').toggleClass('d-hidden');
+		}
+	});
+	
+
+</script>

@@ -1,0 +1,104 @@
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<div id="cdg"></div>
+				</div>
+				<div class="col-sm-12" id="sd">
+					<div class="row" id="desc">
+						<div class="col-sm-12">
+							<div class="d-article">
+								<div class="d-article-section">
+									<p>Crea alertas rapido</p>
+									<ul style="list-style: none;margin:0;padding:0;">
+										<li>
+											<em style="float:left;">text: </em>
+											<div >Texto que se mostrara en la alerta</div>
+										</li>
+
+										<li>
+											<em style="float:left;">text: </em>
+											<div >$('#objeto')</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-11"></div>
+						<div class="col-sm-1">
+							<div id="btnDesc"></div>
+						</div>
+					</div>
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+<template id="tmp">
+	<div id="alert"></div>
+	<script type="text/javascript">
+		$('#alert').divAlert({
+	        text:"Lorem ipsum dolor sit amet, consectetur, adipisicing elit. Eos autem cumque impedit debitis est fuga quod, aliquid dolorum, deleniti, tempora, architecto reprehenderit accusamus provident velit blanditiis unde dignissimos harum recusandae."
+	    });
+	</script>
+
+
+</template>
+<script type="text/javascript">
+	
+	
+	var b = $('#tmp')[0].innerHTML;
+	var edt = $('#cdg').divCoding({
+		prepend:vle,
+		append:'</body>\n</html>',
+		value:b,
+		keys:{
+			"Ctrl-Enter":function(e){
+				var et=$('#cdg').data('divCoding');
+				create('salida',et.value);
+			}
+		}
+	}).data('divCoding');
+	edt.editor.setSize(null,600);
+	create('salida',vle+b+"\n</body>\n</html>");
+
+	
+	$('#btnConfig').click(function(){
+		$(this).toggleClass('icon-navigate_nextchevron_right');
+		$('#menuConfig').toggleClass('d-hidden');
+		$('#salidaCofing').toggleClass('col-sm-12');
+		$('#salidaCofing').toggleClass('col-sm-8');
+		$('#en').toggleClass('col-sm-12');
+		$('#sd').toggleClass('col-sm-12');
+		$('#en').toggleClass('col-sm-6');
+		$('#sd').toggleClass('col-sm-6');
+	});
+
+
+
+	$('#btnDesc').divButton({
+		type:'link',
+		icon:{
+			class:'icon-upload7'
+		},
+		click:function(){
+			var btn = $('#btnDesc').data('divButton');
+			btn.toggleClass('icon-upload7');
+			btn.toggleClass('icon-download8');
+			$('#desc').toggleClass('d-hidden');
+		}
+	});
+	
+
+</script>
