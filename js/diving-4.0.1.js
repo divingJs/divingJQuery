@@ -374,8 +374,10 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
         init: function(prm) {
             prm = $.extend(prm, {
                 text: prm.text || $(this)[0].innerHTML || '',
-                class: "d-text" + ((prm.type) ? ' d-' + prm.type : ' d-default') + ((prm.class) ? ' ' + prm.class : '')
+                class: "d-text"+((prm.type)?('TEXT|NUMBER'.trim('|').includes(prm.type.toUpperCase()))?' d-'+prm.type:' d-default':' d-default')+((prm.class)?' '+prm.class:''),
+                type:((prm.type)?(('TEXT|NUMBER'.trim('|').includes(prm.type.toUpperCase()))?prm.type:'text'):'')
             });
+
             var widtgetData = {
                 setText: function(t) {
                     $(this.elem).find('input')[0].value=t;this.text=t;
@@ -783,6 +785,7 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                 elements:prm.elements||[],
                 selected:null,
                 openTo: prm.openTo||null,
+                dataSource:prm.dataSource||prm.elements||[],
                 click:prm.click||null,
                 items:[],
                 addElement:function(o){
@@ -840,7 +843,7 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                     wst.adElement(ul,v, d);
                 });
             }else{
-                $(li).text(c.text);
+                $(li).append(c.text);
                 $(li).click(function(){
                     var _lis = [];
                     var _e=$(e);

@@ -18,7 +18,8 @@ $('#config').divListView({
         {text:'Configuracion',elements:[
             {text:'Class',href:'/pages/ListView/Config/class.html'},
             {text:'Elements',href:'/pages/ListView/Config/elements.html'},
-            {text:'SubElements',href:'/pages/ListView/Config/subElements.html'}
+            {text:'SubElements',href:'/pages/ListView/Config/subElements.html'},
+            {text:'Template',href:'/pages/ListView/Config/template.html'}
         ]},
         {text:'Eventos',elements:[
             {text:'Click',href:'/pages/ListView/Config/click.html'},
