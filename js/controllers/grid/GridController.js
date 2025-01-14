@@ -39,7 +39,7 @@ $('#grid').divGrid({
     sortable:true
 });
 */
-var g = $('#grid').data('divGrid');
+/*var g = $('#grid').data('divGrid');
 $('#config').divListView({
     elements:[
         {text:'Configuracion',elements:[
@@ -74,7 +74,50 @@ $('#config').divListView({
             );
         }
     }
+});*/
+
+
+
+
+var dts = new diving.data.DataSource({
+     data:[
+        {text:'Configuracion',elements:[
+            {text:'Creacion',href:'/pages/Grid/Config/creacion.html'},
+            {text:'Columns',elements:[
+                {text:'Fields',href:'/pages/Grid/Config/columns.html'},
+                {text:'width',href:'/pages/Grid/Config/column.with.html'},
+                {text:'Format',href:'/pages/Grid/Config/fromat.html'},
+                {text:'Attributes',href:'/pages/Grid/Config/attributes.html'},
+                {text:'Editor',href:'/pages/Grid/Config/columns.editor.html'}
+                ]},
+            {text:'Sortable',href:'/pages/Grid/Config/sortable.html'},
+            {text:'Scrollable',href:'/pages/Grid/Config/scrollable.html'},
+            {text:'Group',href:'/pages/Grid/Config/group.html'}
+        ]}
+    ]
 });
+
+var g = $('#config').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#config').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#salidaCofig' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');
+
+
+
+
+
 $('#salidaCofigButton').load('/pages/Grid/Config/creacion.html');
 
 

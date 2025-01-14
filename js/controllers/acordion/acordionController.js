@@ -1,21 +1,46 @@
 
+var dts = new diving.data.DataSource({
+     data:[
+        {text:'Configuracion',elements:[
+            {text:'Items',href:'/pages/acordion/Config/items.html'},
+            {text:'Show',href:'/pages/acordion/Config/show.html'}
+        ]},
+        {text:'Methods',elements:[
+            {text:'AddElement',href:'/pages/acordion/Config/addElement.html'},
+            {text:'Destroy',href:'/pages/acordion/Config/destroy.html'},
+            {text:'Remove',href:'/pages/acordion/Config/remove.html'}
+        ]}
+    ]
+});
 
+var g = $('#config').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#config').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#salidaCofig' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');
 
+/*
 $('#config').divListView({
     elements:[
         {text:'Configuracion',elements:[
             {text:'Items',href:'/pages/acordion/Config/items.html'},
-            {text:'Show',href:'/pages/acordion/Config/show.html'}/*,
-            {text:'Icono',href:'/pages/acordion/Config/icon.html'}*/
+            {text:'Show',href:'/pages/acordion/Config/show.html'}
         ]},
-        /*{text:'Eventos',elements:[
-            {text:'Destroy',href:'/pages/acordion/Config/destroy.html'}
-            ]},*/
         {text:'Methods',elements:[
             {text:'AddElement',href:'/pages/acordion/Config/addElement.html'},
             {text:'Destroy',href:'/pages/acordion/Config/destroy.html'},
-            {text:'Remove',href:'/pages/acordion/Config/remove.html'}/*,
-            {text:'setText',href:'/pages/acordion/Config/settext.html'}*/
+            {text:'Remove',href:'/pages/acordion/Config/remove.html'}
         ]}
     ],
     openTo:'#salidaCofig',
@@ -36,7 +61,7 @@ $('#config').divListView({
             );
         }
     }
-});
+});*/
 
 $('#salidaCofig').load('pages/acordion/Config/items.html');
 

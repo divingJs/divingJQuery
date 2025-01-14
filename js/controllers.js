@@ -1,6 +1,6 @@
 
-$('#menu').divListView({
-    elements:[
+var dts = new diving.data.DataSource({
+     data:[
         {text:'Acordion'    , href:"/pages/Acordion/index.html"},
         {text:'Alert'       , href:'/pages/Alert/index.html'},
         {text:'Button'      , href:'/pages/Button/index.html'},
@@ -13,7 +13,32 @@ $('#menu').divListView({
         {text:'RadioButton' , href:'/pages/RadioButton/index.html'},
         {text:'Tabstrip'    , href:'/pages/TabsTrip/index.html'},
         {text:'Text'        , href:'/pages/Text/index.html'}
-        ],
+        ]
+});
+
+var g = $('#menu').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#menu').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#area' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');
+
+//,template:'<div class="row"><div class="col-sm-9">#:text#</div><div class="col-sm-3">#:value#</div></div>'
+
+
+/*
+$('#menu').divListView({
+    elements:,
     openTo:'#area'
     ,class:'list-group-flush',
     click:function(){
@@ -32,5 +57,5 @@ $('#menu').divListView({
             );
         }
     }
-});
+});*/
 $('#area').load('pages/p/home.html');

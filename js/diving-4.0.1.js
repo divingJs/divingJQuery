@@ -774,100 +774,111 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
 })();
 /*ListView*/
 (function(){
-    var widget = {
-        name: "ListView",
-        init: function(prm) {
-            prm=$.extend(prm,{
-                class:(prm.class||'')+" d-listView"
-            });
-            var widtgetData = {
-                elem:$(this)[0],
-                elements:prm.elements||[],
-                selected:null,
-                openTo: prm.openTo||null,
-                dataSource:prm.dataSource||prm.elements||[],
-                click:prm.click||null,
-                items:[],
-                addElement:function(o){
-                    widget.adElement($(this.elem)[0].firstChild,o,this);
-                },
-                remove:function(o){
-                    var x=(typeof o == 'object')?this.elements.findIndex(item => item.text == o.text):o;
-                    this.elements.slice(x,1);
-                    this.items.slice(x,1);
-                    var ul = $(this.elem)[0].firstChild;
-                    ul.removeChild(ul.children[x]);
-                }
-            };
-            delete prm.elements;
-            delete prm.openTo;
-            delete prm.click;
-            widget.createElement(prm,widtgetData);
-            $(this).data('div'+widget.name, widtgetData);
-            return $(this);
-        },
-        createElement: function(p,d) {
-            $(d.elem).empty();
-            var ul = document.createElement('ul');
-            $(ul).addClass('list-group '+(p.hasOwnProperty('class')?' '+p.class:''));
-            var wst = this;
-            $(d.elem).append( ul );
-            $.each(d.elements,function(i,v){
-                wst.adElement(ul,v, d);
-            });
-        },
-        adElement:function(e,c,d){
-            var li = document.createElement('li');
-            d.items.push(li);
-            $(li).addClass('list-group-item');
-            
-            if(c.hasOwnProperty('elements')){
-                var ul = document.createElement('ul');
-                $(ul).addClass('list-group list-group-flush d-hidden');
-                $(li).append(
-                    $('<em>',{
-                        class:'icon-arrow_right',
-                        style:'cursor:pointer;',
-                        click:function(){
-                            $(this).toggleClass('icon-arrow_right');
-                            $(this).toggleClass('icon-arrow_drop_down');
-                            $($($(this).parent()).find('ul')[0]).toggleClass('d-hidden');
-                        }
-                        })//icon-upload7
-                    ).append(
-                        $('<label>',{text:c.text})
-                    );
-                $(li).append(ul);
-                var wst = this;
-                $.each(c.elements,function(i,v){
-                    wst.adElement(ul,v, d);
-                });
-            }else{
-                $(li).append(c.text);
-                $(li).click(function(){
-                    var _lis = [];
-                    var _e=$(e);
-                    while(_e.parent()[0].tagName=='LI' || _e.parent()[0].tagName=='UL'){
-                        _e = _e.parent();
-                    }
-                    _lis = _e.parent().find('li');
-                    $.each(_lis,function(i,v){
-                        $(v).removeClass('active');
-                    });
+     var widget = {
+          name: "ListView",
+          init: function(prm) {
+               prm=$.extend(prm,{
+                    class:"d-listview-content"+(prm.hasOwnProperty('class')?' '+prm.class:'')
+               });
+               var widtgetData = {
+                    elem:$(this)[0],
+                    class:prm.class,
+                    click:prm.click||null,
+                    selected:[],
+                    textField:prm.textField||null,
+                    valueField:prm.valueField||null
+               };
 
-                    $(this).addClass('active');
-                    
-                    d.selected = c;
-                    if(d.click != null){
-                        $(li).click.constructor = d.click;
-                        d.click();
-                    }
-                });
-            }
-            e.append(li);
-        }
-    };
-    diving.widget(widget);
+               widget.createElement(prm,widtgetData);
+               $(this).data('div'+widget.name, widtgetData);
+               return $(this);
+          },
+          createElement: function(p,data) {
+               $(data.elem).empty();
+               var ts = this;
+               var ul = $('<ul>',{class:p.class+' list-group  d-listview'});
+               $.extend(data,{
+                    add:function(e){
+                        ts.addElement(this.domList,e,this);
+                    },
+                    remove:function(e){
+                        var idx = 0;
+                        if(typeof e == 'number'){
+                            idx = e;
+                        }else{
+                            var prp = Object.keys(e);
+                            $.each(this.dataSource.options.dataItems,function(i,v){
+                                if(v[prp]==e[prp]){
+                                    idx = i;
+                                }
+                            });
+                        }
+                        this.dataSource.options.dataItems.splice(idx,1);
+                        this.domList[0].removeChild(this.domList[0].children[idx]);
+                    },
+                    dataSource:p.dataSource||[],
+                    domList:ul,
+                    template:p.template||null
+               });
+               $(data.elem).append(ul);
+               $.each(data.dataSource.options.dataItems,function(i,v){
+                    ts.addElement(ul,v,data);
+               });
+          },
+          addElement: function(ul,obj,component){
+            var ts = this;
+               var dlv = ($(this.elem).data('divListView')!=undefined)?$(this.elem).data('divListView'):component;
+               if(dlv==undefined){
+                    return;
+               }
+               var li = $('<li>',{
+                    'd-value': obj[component.valueField],
+                    class:'list-group-item d-listView-item'
+               });
+               if(obj.hasOwnProperty('elements')){
+                    li.append((component.template!=null)?
+                              diving.template(dlv.template,obj):
+                              obj[component.textField]);
+                    var nUl = $('<ul>',{class:'list-group list-group-flush d-hidden'});
+                    ul.append(li.append(
+                         $('<em>',{
+                              class:'icon-arrow_right',
+                              style:'cursor:pointer;',
+                              click:function(){
+                                   $(this).toggleClass('icon-arrow_right');
+                                   $(this).toggleClass('icon-arrow_drop_down');
+                                   $($($(this).parent()).find('ul')[0]).toggleClass('d-hidden');
+                              }
+                         })
+                    ).append(nUl));
+                    $.each(obj.elements,function(i,v){
+                         ts.addElement(nUl,v,component);
+                    });
+               }else{
+                    li.on('click',function(e){
+                         $.each($(component.elem).find('li'),function(i,v){
+                              $(v).removeClass('active');
+                         });
+                         var _tl = $(e.target);
+                         while(_tl[0].tagName != 'LI'){
+                              _tl = _tl.parent();
+                         }
+                         _tl.addClass('active');
+                         dlv.selected = [{value:_tl.attr('d-value'),text:obj[component.textField]}];
+                         if(dlv.click){
+                              dlv.click.constructor = this.click;
+                              dlv.click(this);
+                         }
+                    });
+                    li.append((component.template!=null)?
+                              diving.template(dlv.template,obj):
+                              obj[component.textField]);
+
+                    ul.append(li);
+               }
+          }
+     };
+     diving.widget(widget);
 })();
 /*grid*/
 (function() {
@@ -1225,448 +1236,6 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
     };
     diving.widget(widget);
 })();
-/*Grid*
-    (function(){
-         var widget = {
-            name: "Grid",
-            init: function(prm) {
-                prm=$.extend(prm,{class:"d-grid",scrollable:(prm.hasOwnProperty('scrollable'))?prm.scrollable:false});
-                var widtgetData = {
-                    elem:$(this)[0],
-                    columns:(prm.columns)?prm.columns:Object.keys(prm.dataSource.data[0]),
-                    editing:false,
-                    command:prm.commands||null,
-                    refresh:function(){
-                        prm.dataSource = this.dataSource;
-                        widget.createElement(prm,this);
-                    }
-                };
-                widget.createElement(prm,widtgetData);
-                $(this).data('div'+widget.name, widtgetData);
-                widget.addCommand(prm.commands, widtgetData, widget, prm );
-            },
-            createElement: function(p,data) {
-                $(data.elem).empty();
-                $.extend(data,{
-                    dataSource:p.dataSource
-                });
-                if(typeof data.columns[0] == "string"){
-                    var oCols=[];
-                    $.each(data.columns,function(i,v){
-                        oCols.push({title:v,field:v});
-                    });
-                    data.columns = oCols;
-                }
-                var th = $('<table>',{'d-role':'t-head'});
-                var t = $('<table>',{'d-role':'t-body'});
-                var h = $('<thead>',{});
-                var b = $('<tbody>',{});
-                var cg = document.createElement('COLGROUP');
-                var cgh = document.createElement('COLGROUP');
-                var oCols = {h:[],b:[]};
-                $.extend(data,{
-                    'd-head':h,
-                    'd-body':b
-                });
-                var ttal=data.columns.length+((data.dataSource.grupo)?data.dataSource.grupo.length:0)+((p.commands!=null)?p.commands.action.length:0);
-                for(var i = 0; i < ttal; i ++ ){
-                    var cl = document.createElement('COL');
-                    var clh = document.createElement('COL');
-                    cg.appendChild(cl);
-                    cgh.appendChild(clh);
-                    oCols.h.push(clh);
-                    oCols.b.push(cl);
-                }
-                this.createColumns(p,data,b,cg);
-                this.createHeaders(p,data,h);
-                if(p.title){
-                    var cp = document.createElement('CAPTION');
-                    cp.appendChild($('<div>',{class:'d-caption-title',text:p.title})[0]);
-                    th[0].appendChild(cp);
-                }
-                th[0].appendChild(cgh);
-                t[0].appendChild(cg);
-                var dhCnt = $('<div>',{'d-role':'d-content-header',class:'d-grid-header'+((p.scrollable)?' d-grid-scroll':'')}).append(th.append(h));
-                var dbCnt = $('<div>',{'d-role':'d-content-body',  class:'d-grid-body'+  ((p.scrollable)?' d-grid-scroll':'')}).append(t.append(b));
-                data.elem.append(dhCnt[0]);
-                data.elem.append(dbCnt[0]);
-                $.each(h.find('tr')[0].cells,function(i,v){
-                    $(oCols.b[i]).attr('style','width:'+$(v)[0].offsetWidth+'px');
-                });
-                if(p.scrollable){
-                    dhCnt.attr('style','width:'+($(data.elem)[0].offsetWidth)+'px;');
-                    dbCnt.attr('style','width:'+($(data.elem)[0].offsetWidth)+'px;height:'+$.addPx(p.height));
-                }else if(p.height){
-                    dbCnt.attr('style','overflow:hidden;height:'+dvn.addPx(p.height));
-                }
-            },
-            addCommand:function(command,data, widget, prm){
-                if( ( command != null )?command.action.includes('add'):false ){
-                    var caption = $($(data.elem).find('table[d-role=t-head]')[0]).find('caption');
-                    var cmdR=$('<div>',{class:'d-comand-row'});
-                    var cpt = $('<div>',{'d-role':'d-content-command',class:'d-grid-command'}).append(cmdR);
-                    var cntCommand=null;
-                    if(caption.length==0){
-                        cntCommand=document.createElement('CAPTION');
-                        cntCommand.appendChild(cpt[0]);
-                    }else{
-                        cntCommand=cpt;
-                    }
-                    $(caption[0]).append(cntCommand);
-                    for(var i = 0; i < command.action.length; i ++ ){
-                        if(command.action[i]=='add'){
-                            var cmd = $('<div>');
-                            cmdR.append(cmd);
-                            $(cmd).divButton({
-                                type: 'default',
-                                class:'d-comand',
-                                'd-role':'t-command',
-                                'command':command.action[i],
-                                text: command.action[i],
-                                click:function(){
-                                    if($(this).attr('command')=='add'){
-                                        widget.addPopup(data,$(data.elem),(command.hasOwnProperty('popup')?command.popup:false));
-                                    }else if($(this).attr('command')=='remove'){
-                                        widget.removePopup(data.dataSource,$(data.elem),(command.hasOwnProperty('popup')?command.popup:false));
-                                    }else{
-                                        widget.updatePopup(data.dataSource,$(data.elem),(command.hasOwnProperty('popup')?command.popup:false));
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            },
-            addPopup:function(dtSource, element, popup){
-                var g=element.data('divGrid');
-                if(g.editing)return;
-                g.editing=true;
-                var flds=(Object.keys(g.dataSource.schema.model.fields).length>0)?g.dataSource.schema.model.fields:obj=$.map(g.columns,function(i){return {[i.field]:{type:'string'}};});
-                var obj;
-                if(obj!=undefined){obj={};$.each(flds,function(i,v){var k = Object.keys(v)[0];obj[k]={type:v[k].type};});}else{obj=flds;}
-                var o={};
-                for(var i=0,l=Object.keys(obj).length;i<l;i++){
-                    var type=function(t,fld){
-                        return $('<div>',{'d-role':'d-grid-edit-text','d-field':fld});
-                    }
-                    o[Object.keys(obj)[i]]=type(obj[Object.keys(obj)[i]].type,Object.keys(obj)[i]);
-                }
-                $.map(g.columns,function(a){ return (a.hasOwnProperty('template'))? delete a.template: a; });
-                var wdt = this;
-                if(popup){
-                    var confirmacion = $('<div>',{'d-role':'notificacion',class:'d-col-4'});
-                    var dt = new $.store.Source({data: [o],schema:{model:{fields:flds}}});
-                    var gg = $('<div>');
-                    gg.divGrid({dataSource:dt,columns: g.columns});
-                    $('body').append(confirmacion);
-                    confirmacion.divNotification({
-                        confirm: true,
-                        text: gg[0].innerHTML,
-                        action:{
-                            cancel:function(){
-                                element.data('divGrid').editing=false;
-                                confirmacion.data('divNotification').destroy();
-                            },
-                            confirm:function(){
-                                var rtext={};
-                                $.each(Object.keys(obj),function(i,v){
-                                    var t = $('div[d-field='+v+']').data('divText').text;
-                                    rtext[v]=(obj[v].type=='number')?parseInt(t):t;
-                                });
-                                dtSource.dataSource.data.push(rtext);
-                                wdt.createTr(element.data('divGrid')['d-body'],rtext,wdt,dtSource);
-                                element.data('divGrid').editing=false;
-                                confirmacion.data('divNotification').destroy();
-                            }
-                        },
-                        destroy:function(){
-                            element.data('divGrid').editing=false;
-                            $(this.elem).removeData('divNotification');
-                            $(this.elem)[0].remove();
-                        }
-                    });
-                    confirmacion.attr('style',confirmacion.attr('style')+'position: absolute;top: 5em;left: 10em;');
-                    var ttl=$(confirmacion).find('div');
-                    $.draggable(ttl[0],confirmacion[0]);
-                }else{
-                    wdt.createTr(element.data('divGrid')['d-body'],o,wdt,dtSource);
-                }
-                var x1=null;
-                $.each(
-                    Object.keys(obj),function(i,v){
-                        $('div[d-field='+v+']').divText({
-                            type:(obj[v].type=='string')?'text':obj[v].type,
-                            keyup:function(k){
-                                if(!popup){
-                                    var t = $('div[d-field='+v+']');
-                                    while(((t!=null)?(t[0].nodeName!='TR'):true)){
-                                        t=(t==null)?$(this):$($(t)[0].parentNode);
-                                    }
-                                    if(k.keyCode==27){
-                                        t.remove();
-                                    }
-                                    if(k.keyCode==13){
-                                        var nobj={};
-                                        $.each(Object.keys(obj),function(i,v){
-                                            nobj[v]=(obj[v].type=='number')?parseInt($(o[v]).data('divText').text):$(o[v]).data('divText').text;
-                                        });
-                                        var dg = $('div[d-field='+v+']');
-                                        while(((dg!=null)?((dg.attr('d-role')!=null)?dg.attr('d-role')!='d-content-body':true):true)){
-                                            dg=(dg==null)?$(this):$($(dg)[0].parentNode);
-                                        }
-                                        dg=$(dg[0].parentNode);
-                                        dg.data('divGrid').dataSource.data.push(nobj);
-                                        wdt.createTr(dg.data('divGrid')['d-body'],nobj,wdt,dg.data('divGrid').dataSource);
-                                        dg.data('divGrid').editing=false;
-                                        t.remove();
-                                    }
-                                }
-                            }
-                        });
-                        if(i==0){
-                            $('div[d-field='+v+']').find('INPUT')[0].focus();
-                        }
-                    }
-                );
-            },
-            removePopup:function(data, element){
-                var t = $(element);
-                while(((t!=null)?(t[0].nodeName!='TR'):true)){
-                    t=(t==null)?$(this):$($(t)[0].parentNode);
-                }
-                $.each(data.relate, function(i,v){
-                    if(t[0]==v.tagTr[0]){
-                        $.each(data.dataSource.data,function(x,y){
-                            if( y['d-row-item'] == v.obj['d-row-item'] ){
-                                var dx = data.dataSource.data.splice(x,1);
-                                var dy = data.relate.splice(i,1);
-                                return false;
-                            }
-                        });
-                        return false;
-                    }
-                });
-                data.dataSource = new $.store.Source(data.dataSource.initParams);
-                $(t).remove();
-                data.refresh();
-            },
-            updatePopup:function(data,element,popup){
-                var g=$(data.elem).data('divGrid');
-                if(g.editing)return;
-                g.editing=true;
-                var flds=(Object.keys(g.dataSource.schema.model.fields).length>0)?g.dataSource.schema.model.fields:obj=$.map(g.columns,function(i){return {[i.field]:{type:'string'}};});
-                var obj;
-                if(obj!=undefined){obj={};$.each(flds,function(i,v){var k = Object.keys(v)[0];obj[k]={type:v[k].type};});}else{obj=flds;}
-                var o={};
-                for(var i=0,l=Object.keys(obj).length;i<l;i++){
-                    var type=function(t,fld){
-                        return $('<div>',{'d-role':'d-grid-edit-text','d-field':fld});
-                    }
-                    o[Object.keys(obj)[i]]=type(obj[Object.keys(obj)[i]].type,Object.keys(obj)[i]);
-                }
-                $.map(g.columns,function(a){ return (a.hasOwnProperty('template'))? delete a.template: a; });
-                var wdt = this;
-                if(popup){
-                    var confirmacion = $('<div>',{'d-role':'notificacion',class:'d-col-4'});
-                    var dt = new $.store.Source({data: [o],schema:{model:{fields:flds}}});
-                    var gg = $('<div>');
-                    gg.divGrid({dataSource:dt,columns: g.columns});
-                    $('body').append(confirmacion);
-                    confirmacion.divNotification({
-                        confirm: true,
-                        text: gg[0].innerHTML,
-                        action:{
-                            cancel:function(){
-                                $(data.elem).data('divGrid').editing=false;
-                                confirmacion.data('divNotification').destroy();
-                            },
-                            confirm:function(){
-                                var rtext={};
-                                $.each(Object.keys(obj),function(i,v){
-                                    var t = $('div[d-field='+v+']').data('divText').text;
-                                    rtext[v]=(obj[v].type=='number')?parseInt(t):t;
-                                });
-                                dtSource.dataSource.data.push(rtext);
-                                wdt.createTr($(data.elem).data('divGrid')['d-body'],rtext,wdt,dtSource);
-                                $(data.elem).data('divGrid').editing=false;
-                                confirmacion.data('divNotification').destroy();
-                            }
-                        },
-                        destroy:function(){
-                            $(data.elem).data('divGrid').editing=false;
-                            $(this.elem).removeData('divNotification');
-                            $(this.elem)[0].remove();
-                        }
-                    });
-                    confirmacion.attr('style',confirmacion.attr('style')+'position: absolute;top: 5em;left: 10em;');
-                    var ttl=$(confirmacion).find('div');
-                    $.draggable(ttl[0],confirmacion[0]);
-                }
-                /*
-                var t = diving(element);
-                while(((t!=null)?(t[0].nodeName!='TR'):true)){
-                    t=(t==null)?diving(this):diving(diving(t)[0].parentNode);
-                }
-                var x=0;
-                if(popup){
-                    console.log( t, x, data, element, popup );
-                }
-                /*
-                    1.- se agrega una columna flotante a cada renglon que aparecera con la leyenda update en el momento del mouse over
-                    2.- se construye un grid con las columnas visibles para update
-                * /
-            },
-            createColumns:function(p,data,body){
-                var wdgt = this;
-                for(var i = p.dataSource.view().length-1; i >= 0; i--){
-                    var keys = Object.keys(p.dataSource.view()[i]);
-                    wdgt.createTr(body,p.dataSource.view()[i],wdgt, data);
-                }
-            },
-            createTr:function(content, fields,wdgt, data){
-                //console.log('\ncontent:', content,'\nfields:', fields,'\nwdgt:', wdgt,'\ndata:', data );
-                var ks;
-                if(fields.hasOwnProperty('items')){
-                    var tr = $('<tr>',{
-                        class:'d-grid-tr d-grid-tr-group',
-                        'd-rownum':content[0].rows.length,
-                        'd-field':fields.field,
-                        'd-ctr-clpse':0
-                    });
-                    ks = Object.keys( fields.items );
-                    var rg=-1;
-                    var textoGrupo = '';
-                    for( var i = 0; i < data.dataSource.grupo.length; i ++ ){
-                        textoGrupo = data.dataSource.grupo[i].field;
-                        if(data.dataSource.grupo[i].field==fields.field){
-                            tr.append(wdgt.createTd($('<em>',{class:'icon-chevron-up1'}),0));
-                            tr.attr('d-ctr-clpse',i);
-                            rg++;
-                            break;
-                        }else{
-                            rg++;
-                            tr.append(wdgt.createTd('',0));
-                        }
-                    }
-                    var td = wdgt.createTd(textoGrupo+':'+fields.value,((data.dataSource.grupo.length-rg)+data.columns.length));
-                    tr[0].onclick=function(e){
-                        wdgt.colapseGrid( tr,td,content );
-                        $($( this ).find('em')[0]).toggleClass('icon-chevron-down1');
-                        $($( this ).find('em')[0]).toggleClass('icon-chevron-up1');
-                    }
-                    tr.append(td);
-                    content.append( tr );
-                    for(var i = 0; i < fields.items.length; i ++){
-                        wdgt.createTr(content,fields.items[i],wdgt,data);
-                    }
-                }else{
-                    var rlate = (data.hasOwnProperty('relate')?data.relate:data.relate=[]);
-                    ks = Object.keys(fields);
-                    var tr = $('<tr>',{class:'d-grid-tr','d-row-class':'item','d-rownum':content[0].rows.length});
-                    rlate.push({obj:fields,tagTr:tr});
-                    if(data.dataSource.grupo)
-                    for(var j = 0; j < data.dataSource.grupo.length; j ++ ){
-                        tr.append(wdgt.createTd('',null));
-                    }
-                    for( var j = 0; j<ks.length; j ++ ){
-                        for(var k = 0; k < data.columns.length; k ++ ){
-                            if( data.columns[k].field == ks[j]){
-                                tr.append(
-                                    wdgt.createTd(
-                                        (data.columns[k].hasOwnProperty('template')?
-                                            diving.template(data.columns[k].template,fields):
-                                        fields[ks[j]]),
-                                        null
-                                    )
-                                );
-                            }
-                        }
-                    }
-                    if((data.command!=null)?data.command.hasOwnProperty('action')?data.command.action.includes('update'):false:false){
-                        tr.append(
-                            wdgt.createTd(
-                                $('<em>',{
-                                    class:'icon-pen-angled',
-                                    click:function(){
-                                        wdgt.updatePopup(data,this, data.command.popup );
-                                    }
-                                }),
-                                null
-                            )
-                        );
-                    }
-                    if((data.command!=null)?data.command.hasOwnProperty('action')?data.command.action.includes('remove'):false:false){
-                        tr.append(
-                            wdgt.createTd(
-                                $('<em>',{
-                                    class:'icon-clearclose',
-                                    click:function(){
-                                        wdgt.removePopup(data,this);
-                                    }
-                                }),
-                                null
-                            )
-                        );
-                    }
-                    content.append(tr);
-                }
-            },
-            createTd:function(text,clspan){
-                var td = $('<td>');
-                td.append(text);
-                if(clspan){
-                    td.attr('colspan',clspan);
-                }
-                return td;
-            },
-            createHeaders:function(p,data,header){
-                var tr = $( '<tr>');
-                if(data.dataSource.grupo)
-                for(var i=0;i<data.dataSource.grupo.length; i ++){
-                    tr.append( $( '<th>'));
-                }
-                for( var i = 0; i < data.columns.length; i ++ ){
-                    tr.append( $( '<th>',{text:data.columns[i].title}));
-                }
-
-                if((data.command!=null)?data.command.hasOwnProperty('action')?data.command.action.includes('update'):false:false){
-                    tr.append(
-                        $('<th>',{})
-                    );
-                }
-                if((data.command!=null)?data.command.hasOwnProperty('action')?data.command.action.includes('remove'):false:false){
-                    tr.append(
-                        $('<th>',{})
-                    );
-                }
-                header.append( tr );
-            },
-            colapseGrid:function(tr,td,cnt){
-                var grupo = tr.attr('d-field');
-                var clpse = tr.attr('d-ctr-clpse');
-                for( var i = ( parseInt(tr.attr('d-rownum'))+1); i < cnt[0].rows.length; i ++ ){
-                    if( $( cnt[0].rows[i] ).attr('d-field') != grupo ){
-                        if( parseInt( $(cnt[0].rows[i]).attr('d-ctr-clpse') ) < clpse ){
-                            break;
-                        }else{
-                            var dhb = $(cnt[0].rows[i]).attr('d-hid-by');
-                            if(((dhb!=null)?dhb:grupo)==grupo){
-                                $(cnt[0].rows[i]).toggleClass('d-hidden');
-                                if($.className.has(cnt[0].rows[i],'d-hidden')){
-                                    $(cnt[0].rows[i]).attr('d-hid-by',grupo);
-                                }else{
-                                    $(cnt[0].rows[i]).removeAttr('d-hid-by');
-                                }
-                            }
-                        }
-                    }else{
-                        break;
-                    }
-                }
-            }
-        };
-        diving.widget(widget);
-    })();*/
 /*Accordion*/
 (function() {
     var widget = {
@@ -1909,14 +1478,14 @@ class Source {
      }
      setData(data) {
           this.options.dataItems=data.map(item => {
-                    const fields = this.options?.schema?.model?.fields||{};
-                    for (const [key, field] of Object.entries(fields)) {
-                         if (field.type === 'number') item[key] = parseFloat(item[key]);
-                         else if (field.type === 'date') item[key] = new Date(item[key]);
-                         else if (field.type === 'string') item[key] = String(item[key]);
-                    }
-                    return item;
-               });
+               const fields = this.options?.schema?.model?.fields||{};
+               for (const [key, field] of Object.entries(fields)) {
+                    if (field.type === 'number') item[key] = parseFloat(item[key]);
+                    else if (field.type === 'date') item[key] = new Date(item[key]);
+                    else if (field.type === 'string') item[key] = String(item[key]);
+               }
+               return item;
+          });
      }
      view() {return this.options.dataItems;}
      group(p) {this.options['dataItems'] = diving.group(this.options.dataItems, p);}

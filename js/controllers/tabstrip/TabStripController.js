@@ -17,7 +17,7 @@ tbs.removeElement('#elem_4');
 */
 
 
-
+/*
 $('#config').divListView({
     elements:[
         {text:'Configuracion',elements:[
@@ -49,4 +49,37 @@ $('#config').divListView({
             );
         }
     }
+});*/
+
+
+var dts = new diving.data.DataSource({
+     data:[
+        {text:'Configuracion',elements:[
+            {text:'Elements',href:'/pages/TabsTrip/Config/Elements.html'},
+            {text:'Open',href:'/pages/TabsTrip/Config/open.html'}
+        ]},
+        {text:'Eventos',elements:[
+            {text:'AddElement',href:'/pages/TabsTrip/Config/addElement.html'},
+            {text:'Open',href:'/pages/TabsTrip/Config/methodOpen.html'},
+            {text:'Remove',href:'/pages/TabsTrip/Config/remove.html'},
+            {text:'selected',href:'/pages/TabsTrip/Config/getSelected.html'}
+        ]}
+    ]
 });
+
+var g = $('#config').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#config').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#salidaCofig' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');

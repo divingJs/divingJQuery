@@ -25,7 +25,7 @@ $('#multiSelection').divMultiSelect({
     }
 });*/
 
-
+/*
 
 $('#config').divListView({
     elements:[
@@ -58,7 +58,45 @@ $('#config').divListView({
             );
         }
     }
+});*/
+
+
+
+
+
+var dts = new diving.data.DataSource({
+     data:[
+        {text:'Configuracion',elements:[
+            {text:'DataSource basico',href:'/pages/MultiSelect/Config/arreglo.html'},
+            {text:'DataSource',href:'/pages/MultiSelect/Config/dataSource.html'},
+            {text:'DataTextField',href:'/pages/MultiSelect/Config/dataTextField.html'},
+            {text:'DataValueField',href:'/pages/MultiSelect/Config/dataValueField.html'}
+        ]},
+        {text:'Eventos',elements:[
+            {text:'Select',href:'/pages/MultiSelect/Config/selected.html'},
+            {text:'Change',href:'/pages/MultiSelect/Config/change.html'}
+        ]}
+    ]
 });
+
+var g = $('#config').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#config').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#salidaCofig' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');
+
+
 
 $('#salidaCofig').load('pages/MultiSelect/Config/dataSource.html');
 

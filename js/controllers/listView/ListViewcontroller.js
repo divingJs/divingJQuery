@@ -1,19 +1,4 @@
-/*
-$('#listview').divListView({
-    elements:[
-        {text:'Elemento 1' , href:'#'},
-        {text:'Elemento 2' , href:'#'},
-        {text:'Elemento 3' , href:'#'},
-        {text:'Elemento 4' , href:'#'},
-        {text:'Elemento 5' , href:'#'},
-        {text:'Elemento 6' , href:'#'},
-        {text:'Elemento 7' , href:"#"}
-        ]
-});
-*/
-
-
-$('#config').divListView({
+/*$('#config').divListView({
     elements:[
         {text:'Configuracion',elements:[
             {text:'Class',href:'/pages/ListView/Config/class.html'},
@@ -46,16 +31,40 @@ $('#config').divListView({
             );
         }
     }
+});*/
+
+
+
+var dts = new diving.data.DataSource({
+     data:[
+        {text:'Configuracion',elements:[
+            {text:'Class',href:'/pages/ListView/Config/class.html'},
+            {text:'Elements',href:'/pages/ListView/Config/elements.html'},
+            {text:'SubElements',href:'/pages/ListView/Config/subElements.html'},
+            {text:'Template',href:'/pages/ListView/Config/template.html'}
+        ]},
+        {text:'Eventos',elements:[
+            {text:'Click',href:'/pages/ListView/Config/click.html'},
+            {text:'AddElement',href:'/pages/ListView/Config/addElement.html'},
+            {text:'remove',href:'/pages/ListView/Config/remove.html'}
+            //{text:'remove by index',href:'/pages/ListView/Config/removeByIndex.html'}
+        ]}
+    ]
 });
 
-//$('#salidaCofig').load('pages/Button/Config/creacion.html');
-/*
-$('#previo').click(function(){
-    var cnt = $( this ).parent().find('div[class*=d-article]');
-    $.each(cnt,function(i,v){
-        if($(v).attr('id')!='previo'){
-            $(v).toggle('hidden');
-        }
-    });
-});
-*/
+var g = $('#config').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#config').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#salidaCofig' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');

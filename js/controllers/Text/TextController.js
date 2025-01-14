@@ -22,11 +22,11 @@ $('#text3').divText({
     min:0,
     max:100
 });*/
-
+/*
 $('#config').divListView({
     elements:[
         {text:'Configuracion',elements:[
-            //{text:'PlaceHolder',href:'/pages/Text/Config/placeHolder_1.html'},
+            {text:'PlaceHolder',href:'/pages/Text/Config/placeHolder_1.html'},
             {text:'PlaceHolder',href:'/pages/Text/Config/placeHolder.html'},
             {text:'Type',href:'/pages/Text/Config/type.html'},
             {text:'Step',href:'/pages/Text/Config/step.html'},
@@ -34,10 +34,7 @@ $('#config').divListView({
             {text:'Max',href:'/pages/Text/Config/max.html'},
             {text:'Multiple',href:'/pages/Text/Config/multiple.html'},
             {text:'Resize',href:'/pages/Text/Config/resize.html'}
-        ]}/*,
-        {text:'Eventos',elements:[
-            {text:'AddElement',href:'/pages/TabsTrip/Config/addElement.html'}
-        ]}*/
+        ]}
     ],
     openTo:'#salidaCofig',
     class:'list-group-flush',
@@ -58,3 +55,39 @@ $('#config').divListView({
         }
     }
 });
+
+*/
+
+
+
+var dts = new diving.data.DataSource({
+     data:[
+        {text:'Configuracion',elements:[
+            {text:'PlaceHolder',href:'/pages/Text/Config/placeHolder_1.html'},
+            {text:'PlaceHolder',href:'/pages/Text/Config/placeHolder.html'},
+            {text:'Type',href:'/pages/Text/Config/type.html'},
+            {text:'Step',href:'/pages/Text/Config/step.html'},
+            {text:'Min',href:'/pages/Text/Config/min.html'},
+            {text:'Max',href:'/pages/Text/Config/max.html'},
+            {text:'Multiple',href:'/pages/Text/Config/multiple.html'},
+            {text:'Resize',href:'/pages/Text/Config/resize.html'}
+        ]}
+    ]
+});
+
+var g = $('#config').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#config').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#salidaCofig' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');

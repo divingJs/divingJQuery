@@ -62,11 +62,7 @@ $('#previo').click(function(){
         }
     });
 */
-
-
-
-
-
+/*
 $('#configButton').divListView({
     elements:[
         {text:'Configuracion',elements:[
@@ -102,7 +98,41 @@ $('#configButton').divListView({
         }
     }
 });
+*/
+var dts = new diving.data.DataSource({
+     data:[
+        {text:'Configuracion',elements:[
+            {text:'Text',href:'/pages/Button/Config/creacion.html'},
+            {text:'Type',href:'/pages/Button/Config/type.html'},
+            {text:'Icono',href:'/pages/Button/Config/icon.html'}
+        ]},
+        {text:'Eventos',elements:[
+            {text:'Click',href:'/pages/Button/Config/click.html'}
+            ]},
+        {text:'Methods',elements:[
+            {text:'Destroy',href:'/pages/Button/Config/destroy.html'},
+            {text:'Enabled',href:'/pages/Button/Config/enabled.html'},
+            {text:'setText',href:'/pages/Button/Config/settext.html'}
+        ]}
+    ]
+});
 
+var g = $('#configButton').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#configButton').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#salidaCofigButton' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');
 $('#salidaCofigButton').load('pages/Button/Config/creacion.html');
 
 

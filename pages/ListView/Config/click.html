@@ -23,18 +23,26 @@
 <template id="tmp">
 	<div id="listView"></div>
 	<script type="text/javascript">
+
 		$("#listView").divListView({
-			elements:[{text:'Elemento 1'},
-					{text:'Elemento 2'},
-					{text:'Elemento 3'},
-					{text:'Elemento 4'},
-					{text:'Elemento 5'}],
-			click:function(){
-		        var d = $('#listView').data('divListView');
-		        var c = d.selected;
-		        console.log( d );
-			}
+			dataSource: new diving.data.DataSource({
+			     data:[
+			        {text:'element_1',value:1},
+			        {text:'element_2',value:2},
+			        {text:'element_3',value:3},
+			        {text:'element_4',value:4},
+			        {text:'element_5',value:5},
+			        {text:'element_6',value:6}
+			    ]
+			}),
+		    textField:'text',
+		    valueField:'value',
+		    click:function(){
+		    	var lv = $("#listView").data('divListView');
+		    	console.log(lv.selected);
+		    }
 		});
+
 	</script>
 </template>
 <script type="text/javascript">

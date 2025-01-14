@@ -44,12 +44,12 @@ function create(frame,text){
     doc.write(head);
     doc.write(body);
     doc.close();
-	setTimeout(function(){
-		var he = $('.CodeMirror-sizer')[0].offsetHeight;
-		$('#salida')[0].style.height=he+'px';
-		$('#salida')[0].style.width='100%';
-		$('#salida')[0].style.border='solid 0px #f4f4f4';
-	},100);
+		setTimeout(function(){
+			var he = $('.CodeMirror-sizer')[0].offsetHeight;
+			$('#salida')[0].style.height=he+'px';
+			$('#salida')[0].style.width='100%';
+			$('#salida')[0].style.border='solid 0px #f4f4f4';
+		},100);
 }
 
 var myModeSpec = {

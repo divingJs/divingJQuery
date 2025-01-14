@@ -67,7 +67,7 @@
     });
 */
 
-$('#configura').divListView({
+/*$('#configura').divListView({
     elements:[
         {text:'Configuracion',elements:[
             {text:'Checked',href:'/pages/CheckBox/Config/checked.html'},
@@ -105,7 +105,47 @@ $('#configura').divListView({
             );
         }
     }
+});*/
+var dts = new diving.data.DataSource({
+     data:[
+        {text:'Configuracion',elements:[
+            {text:'Checked',href:'/pages/CheckBox/Config/checked.html'},
+            {text:'Dir',href:'/pages/CheckBox/Config/dir.html'},
+            {text:'Items',href:'/pages/CheckBox/Config/items.html'},
+            {text:'Icono',href:'/pages/CheckBox/Config/icon.html'},
+            {text:'Label',href:'/pages/CheckBox/Config/label.html'},
+            {text:'Value',href:'/pages/CheckBox/Config/value.html'}
+        ]},
+        {text:'Eventos',elements:[
+            {text:'Click',href:'/pages/CheckBox/Config/click.html'},
+            {text:'Destroy',href:'/pages/CheckBox/Config/destroy.html'},
+            {text:'GetValue',href:'/pages/CheckBox/Config/getValue.html'}
+        ]},
+        {text:'Methodos',elements:[
+            {text:'Add',href:'/pages/CheckBox/config/add.html'},
+            {text:'Remove',href:'/pages/CheckBox/config/remove.html'}
+        ]}
+    ]
 });
+
+var g = $('#configura').divListView({
+     dataSource:dts,
+     textField:'text',
+     valueField:'href',
+     class:'list-group-flush',
+     click:function(){
+          var _lv = $('#configura').data('divListView');
+          var href = _lv.selected[0].value;
+          $( '#salidaCofigura' ).load(
+                (href.startsWith('http')?
+                href:
+                (window.location.href.replace('index.html','').replace(/\#$/gm,'')) + href
+                )
+            );
+     }
+}).data('divListView');
+
+
 
 $('#salidaCofigura').load('pages/CheckBox/Config/items.html');
 

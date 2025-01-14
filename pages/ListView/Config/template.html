@@ -23,11 +23,24 @@
 <template id="tmp">
 	<div id="listView"></div>
 	<script type="text/javascript">
-		var _ltv = $("#listView").divListView({}).data('divListView');
-      for(var i=0;i<10;i++){
-        var tmp = '<div id="id_'+i+'" class="row"><div class="col-sm-4">hola '+i+'</div><div class="col-sm-4">col 2</div><div class="col-sm-4">col 3</div>';
-        _ltv.addElement({text:tmp});
-      }
+
+
+		$("#listView").divListView({
+			dataSource: new diving.data.DataSource({
+			     data:[
+			        {text:'element_1',value:1},
+			        {text:'element_2',value:2},
+			        {text:'element_3',value:3},
+			        {text:'element_4',value:4},
+			        {text:'element_5',value:5},
+			        {text:'element_6',value:6}
+			    ]
+			}),
+		    textField:'text',
+		    valueField:'value',
+		    template:'<div class="row"><div class="col-sm-9">#:text#</div><div class="col-sm-3">#:value#</div></div>'
+		});
+
 	</script>
 </template>
 <script type="text/javascript">

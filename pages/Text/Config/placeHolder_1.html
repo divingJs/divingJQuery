@@ -63,8 +63,8 @@
 	
 	$('#dvnTabStrip').divTabsTrip({
         content:[
-			{title: 'Ejemplo', id:'example', element:$('<div>').append($('<div>',{id:'cntSalida'})),open:true},
-			{title: 'Codigo', id:'code', element:$('<div>',{id:'cdg'})}
+			{title: 'Codigo', id:'code', element:$('<div>',{id:'cdg'}),open:true},
+			{title: 'Ejemplo', id:'example', element:$('<div>').append($('<div>',{id:'cntSalida'}))}
 		]
 	});
 
@@ -80,7 +80,7 @@
 			}
 		}
 	}).data('divCoding');
-	//edt.editor.setSize(null,600);
+	edt.editor.setSize(null,600);
 	create('salida',vle+b+"\n</body>\n</html>");
 
 	
