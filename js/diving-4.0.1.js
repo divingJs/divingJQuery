@@ -280,7 +280,7 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                     },
                     destroy:function(){
                         $(this.element).removeData('div'+widget.name);
-                        $(this.element)[0].remove();
+                        $(this.element).empty();
                     }
                };
                delete prm.dataSource;
@@ -786,12 +786,16 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                     click:prm.click||null,
                     selected:[],
                     textField:prm.textField||null,
-                    valueField:prm.valueField||null
+                    valueField:prm.valueField||null,
+                    destroy:function(){
+                        $(this.elem).removeData('div'+widget.name);
+                        $(this.elem).empty();
+                    }
                };
 
                widget.createElement(prm,widtgetData);
                $(this).data('div'+widget.name, widtgetData);
-               return $(this);
+               return this;
           },
           createElement: function(p,data) {
                $(data.elem).empty();
@@ -1603,4 +1607,248 @@ diving.data.DataSource = Source;
         }
     };
     diving.widget(widget);
+})();
+/*window*/
+(function(){
+     var widget = {
+          name: "Window",
+          init: function(prm) {
+               var widgetData = {
+                    element: $(this),
+                    class: "d-window",
+                    destroy:function(){
+                         $(this.element).removeData('divWindow');
+                         $(this.element).empty();
+                    },
+                    center:function(){
+                         const $element = $(this.element);
+                         const windowWidth = $(window).width();
+                         const windowHeight = screen.height;
+                         const elementWidth = $element.outerWidth();
+                         const elementHeight = $element.outerHeight();
+                         const left = (windowWidth - elementWidth) / 2;
+                         const top = (windowHeight/2) - (elementHeight/2);
+                         $element.css({
+                              top: `${top}px`,
+                              left: `${left}px`
+                         });
+                    },
+                    modal:function(){
+                         var md = $('<div>',{style:'width:'+screen.width+'px;'+
+                                             'height:'+screen.height+'px;'+
+                                             'top:0px;'+
+                                             'left:0px;'+
+                                             'position:absolute;'+
+                                             'background-color:#04040433;z-index:1;'});
+                         $('body').append(md);;
+                         this.element[0].style['z-index']=2;
+                    },
+                    est:{
+                         _mx:false,
+                         _st:{}
+                    }
+               };
+               prm['scrollable']=prm.scrollable||false;
+               widget.createElement(prm, widgetData);
+               $(this).data('div' + widget.name, widgetData);
+               return $(this);
+          },
+          createElement: function(p, data) {
+               $(data.element).empty();
+               var _cnt = $('<div>', {
+                    class: 'd-window-content ' + (data.class || ''),
+                    style: 'overflow:'+(p.scrollable?'scroll':'hidden')+';padding: 0.5em;width:'+diving.addPx(p.width||200)+'; height:'+diving.addPx(p.height||200)
+               }).append(p.content);
+               var _ttl = $('<div>', {
+                    class: 'd-window-title'
+
+               }).append(p.title || ' - ');
+               if(p.hasOwnProperty('actions')){
+                    if(p.actions.indexOf('close')>-1){
+                         let _close = $('<em>',{
+                              class:'icon-clearclose',
+                              style:'padding:0.5em;cursor:pointer;float:right;' 
+                         });
+                         _close.on('click',function(e){
+                              if(p.hasOwnProperty('close')){
+                                   p.constructor.close = this.click;
+                                   p.close();
+                              }else{
+                                   var w = data.element.data('divWindow');
+                                   w.destroy();
+                              }
+                         });
+                         _ttl.append(_close);
+                    }
+                    if(p.actions.indexOf('maximize')>-1){
+                         var maximize = $('<em>',{
+                              class:'icon-window-maximize',
+                              style:'padding:0.5em;cursor:pointer;float:right;',
+                              click:function(){
+                                   var w = $(data.element).data('divWindow');
+                                   var estiloPrevio = w.est._st;
+                                   var activo = w.est._mx;
+                                   if(!activo){
+                                        w.est={
+                                             _mx: true,
+                                             _st:{
+                                                  position: $(data.element)[0].style.position,
+                                                  left: $(data.element)[0].style.left,
+                                                  top: $(data.element)[0].style.top,
+                                                  width: $($(data.element).find('.d-window-content')[0])[0].style.width,
+                                                  height: $($(data.element).find('.d-window-content')[0])[0].style.height,
+                                             }
+                                        };
+                                        $(data.element).css({
+                                             position:'absolute',
+                                             left:'0',
+                                             top:'0',
+                                             width:screen.width,
+                                             height:screen.height,
+                                        });
+                                        
+                                        $($(data.element).find('.d-window-content')).css({
+                                             width: screen.width,
+                                             height: screen.height
+                                        });
+                                   }else{
+                                        w.est._mx=false;
+                                        $(data.element).css({
+                                             position: w.est._st.position,
+                                             left: w.est._st.left,
+                                             top: w.est._st.top,
+                                             width: '',
+                                             height: ''
+                                        });
+                                        $($(data.element).find('.d-window-content')).css({
+                                             width: w.est._st.width,
+                                             height: w.est._st.height
+                                        });
+                                   }
+                              }
+                         });
+                         _ttl.append(
+                              maximize
+                         );
+                    }
+                    if(p.actions.indexOf('minimize')>-1){
+                         var minimize = $('<em>',{class:'icon-minimize1',style:'padding:0.5em;cursor:pointer;float:right;',click:function(){$($(data.element).find('.d-window-content')[0]).toggle('d-hidden');}});
+                         _ttl.append(minimize);
+                    }
+               }
+               var _window = $('<div>', { class: (p.class || '') });
+               $(data.element).append(_window.append(_ttl).append(_cnt));
+               $(data.element).attr('style','position: absolute;top: 0;left: 0;box-shadow: 1px 1px 3px 2px #dddada;border-radius: 5px;');
+               _ttl[0].cursor="grab";
+               _ttl[0].border='solid 1px #d7d7d7';
+                _ttl[0]['border-top-left-radius']='5px';
+                _ttl[0]['border-top-right-radius']='5px';
+               this.dragger(data.element, _ttl);
+               this.createResizes(data.element,data);
+               if(p.hasOwnProperty('modal')){
+                    data.modal();
+               }
+          },
+          createResizes:function(_w,d){
+               let bb = $('<div>', { 'd-role': _w.attr('id') + '_bb', style: 'cursor:ns-resize;width:' + diving.addPx((_w[0].offsetWidth)) + ';height:0.25em;/*background-color:*/red;position:absolute;bottom:0;' });
+               let br = $('<div>', { 'd-role': _w.attr('id') + '_br', style: 'cursor:ew-resize;width:0.25em;height:' + diving.addPx((_w[0].offsetHeight)) + ';/*background-color:*/red;position:absolute;right:0;top:0;' });
+               let bbr = $('<div>', { 'd-role': _w.attr('id') + '_bbr', style: 'cursor:nwse-resize;width:0.35em;height:0.35em;/*background-color:*/blue;position:absolute;bottom:0;right:0;' });
+               this.addResizeEvent(bb, _w, { direction: 'vertical', side: 'bottom' });
+               this.addResizeEvent(br, _w, { direction: 'horizontal', side: 'right' });
+               this.addResizeEvent(bbr, _w, { direction: 'diagonal', side: 'bottom_right' });
+               _w.append(bb).append(br).append(bbr);
+          },
+          dragger: function(element, handle) {
+               const $draggable = $(element);
+               const $handle = $(handle || element);
+               let isDragging = false;
+               let offsetX = 0, offsetY = 0;
+               $handle.on("mousedown", function(e) {
+                    e.preventDefault();
+                    isDragging = true;
+                    offsetX = e.clientX - $draggable.offset().left;
+                    offsetY = e.clientY - $draggable.offset().top;
+                    handle.css('cursor','grabbing');
+               });
+               $(document).on("mousemove", function(e) {
+                    if (isDragging) {
+                         const x = e.clientX - offsetX;
+                         const y = e.clientY - offsetY;
+                         $draggable.css({
+                              top: y + "px",
+                              left: x + "px"
+                         });
+                    }
+               });
+               $(document).on("mouseup", function() {
+                    if (isDragging) {
+                         isDragging = false;
+                         handle.css("cursor", "grab");
+                    }
+               });
+          },
+          addResizeEvent: function(resizer, element, options) {
+               let isResizing = false;
+               let startWidth, startHeight, startX, startY;
+
+               resizer.on("mousedown", function(e) {
+                    e.preventDefault();
+                    isResizing = true;
+
+                    startWidth = element.width();
+                    startHeight = element.height();
+                    startX = e.clientX;
+                    startY = e.clientY;
+
+                    $(document).on("mousemove.resize", function(e) {
+                         if (isResizing) {
+                              let newWidth = startWidth;
+                              let newHeight = startHeight;
+                              if(options.direction === 'diagonal'){
+                                   switch(options.side){
+                                        case 'bottom_right':
+                                             newHeight = startHeight + (e.clientY - startY);
+                                             newWidth = startWidth + (e.clientX-startX);
+                                             break;
+                                   }
+                              }else if(options.direction === 'vertical'){
+                                   if(options.side==='top'){
+                                        //pendiente
+                                   }else if(options.side==='bottom'){
+                                        newHeight = startHeight + (e.clientY - startY);
+                                   }
+                              }else if(options.direction === 'horizontal'){
+                                   if(options.side === 'right'){
+                                        newWidth = startWidth + (e.clientX-startX);
+                                   }else if(options.side==='left'){
+                                   }
+                              }
+
+                              element.css({
+                                   width: Math.max(newWidth, 100) + "px",
+                                   height: Math.max(newHeight, 100) + "px"
+                              });
+                              $(element.find('.d-window-content')[0]).css({
+                                   width: Math.max(newWidth, 100) + "px",
+                                   height: Math.max(newHeight-40, 100) + "px"
+                              });
+                              $(element.find('div[d-role="'+$(element).attr('id')+'_bl"')[0]).css({height: Math.max(newHeight, 100) + "px"});
+                              $(element.find('div[d-role="'+$(element).attr('id')+'_br"')[0]).css({height: Math.max(newHeight, 100) + "px"});
+                              $(element.find('div[d-role="'+$(element).attr('id')+'_bt"')[0]).css({width: Math.max(newWidth, 100) + "px"});
+                              $(element.find('div[d-role="'+$(element).attr('id')+'_bb"')[0]).css({width: Math.max(newWidth, 100) + "px"});
+                              var _e = $(element).data('divWindow');
+                              _e.est._mx=false;
+                         }
+                    });
+
+                    $(document).on("mouseup.resize", function() {
+                         if (isResizing) {
+                              isResizing = false;
+                              $(document).off(".resize");
+                         }
+                    });
+               });
+          }
+     };
+     diving.widget(widget);
 })();

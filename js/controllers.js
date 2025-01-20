@@ -12,7 +12,8 @@ var dts = new diving.data.DataSource({
         {text:'MultiSelect' , href:'/pages/MultiSelect/index.html'},
         {text:'RadioButton' , href:'/pages/RadioButton/index.html'},
         {text:'Tabstrip'    , href:'/pages/TabsTrip/index.html'},
-        {text:'Text'        , href:'/pages/Text/index.html'}
+        {text:'Text'        , href:'/pages/Text/index.html'},
+        {text:'Window'        , href:'/pages/window/index.html'}
         ]
 });
 

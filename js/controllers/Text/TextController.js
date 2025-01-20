@@ -63,7 +63,7 @@ $('#config').divListView({
 var dts = new diving.data.DataSource({
      data:[
         {text:'Configuracion',elements:[
-            {text:'PlaceHolder',href:'/pages/Text/Config/placeHolder_1.html'},
+            //{text:'PlaceHolder',href:'/pages/Text/Config/placeHolder_1.html'},
             {text:'PlaceHolder',href:'/pages/Text/Config/placeHolder.html'},
             {text:'Type',href:'/pages/Text/Config/type.html'},
             {text:'Step',href:'/pages/Text/Config/step.html'},
@@ -71,6 +71,11 @@ var dts = new diving.data.DataSource({
             {text:'Max',href:'/pages/Text/Config/max.html'},
             {text:'Multiple',href:'/pages/Text/Config/multiple.html'},
             {text:'Resize',href:'/pages/Text/Config/resize.html'}
+        ]},
+        {text:'Event',elements:[
+            {text:'KeyUp',href:'/pages/Text/Config/keyup.html'},
+            {text:'KeyDown',href:'/pages/Text/Config/keydown.html'},
+            {text:'Change',href:'/pages/Text/Config/change.html'}
         ]}
     ]
 });
