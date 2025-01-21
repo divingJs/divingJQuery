@@ -5,23 +5,25 @@
 		</div>
 	</div>
 </div>
-
 <div id="cntJS">
 	<div class="d-article">
 		<div class="d-article-section">
 			<div class="row">
 				<div class="col-sm-12" id="en">
-					<div id="codigo">
-					</div>
+					<div id="cdg"></div>
 				</div>
 				<div class="col-sm-12" id="sd">
-					
 					<div class="row" id="desc">
 						<div class="col-sm-12">
 							<div class="d-article">
 								<div class="d-article-section">
-									<p>da formato a tus columnas</p><br />
-									<b>format</b> : crea el formato a columnas<br />
+									<p>Espesifica las acciones que quieras agregar</p>
+									<ul style="list-style: none;margin:0;padding:0;">
+										<li>
+											<em style="float:left;">actions: </em>
+											<div>Array(String)</div>
+										</li>
+									</ul>
 								</div>
 							</div>
 						</div>
@@ -32,7 +34,6 @@
 							<div id="btnDesc"></div>
 						</div>
 					</div>
-
 					<div id="cntSalida" class="cntSalida"></div>
 				</div>	
 			</div>
@@ -40,43 +41,28 @@
 	</div>
 </div>
 <template id="tmp">
-	<div id="grid"></div>
+	<div id="window"></div>
 	<script type="text/javascript">
-		$("#grid").divGrid({
-			dataSource:new diving.data.DataSource({
-              data:[
-                {name:'Jane',age:30,salary:450.398274, fecha:new Date()},
-                {name:'John',age:25,salary:800.274, fecha:'25/01/2025'}
-              ],
-              schema:{
-              	model:{
-              		fields:{
-              			name:{type:'string'},
-              			age:{type:'number'},
-              			salary:{type:'number'},
-              			fecha:{type:'date'}
-              		}
-              	}
-              }
-            }),
-            columns:[{field:'name',title:'NOMBRE'},
-            		 {field:'age',title:'EDAD'},
-            		 {field:'salary',title:'SALARIO',format:'{0:u2}'},
-            		 {field:'fecha',title:'FECHA',format:'{0:dd/MM/yyyy}'}]
+
+		$('#window').divWindow({
+			actions:['close','minimize','maximize'],
+		    content:'Lorem ipsum dolor sit amet consectetur adipisicing elit.'
 		});
 	</script>
+
+
 </template>
 <script type="text/javascript">
-
-
+	
+	
 	var b = $('#tmp')[0].innerHTML;
-	var edt = $('#codigo').divCoding({
+	var edt = $('#cdg').divCoding({
 		prepend:vle,
 		append:'</body>\n</html>',
 		value:b,
 		keys:{
 			"Ctrl-Enter":function(e){
-				var et=$('#codigo').data('divCoding');
+				var et=$('#cdg').data('divCoding');
 				create('salida',et.value);
 			}
 		}
@@ -94,8 +80,9 @@
 		$('#sd').toggleClass('col-sm-12');
 		$('#en').toggleClass('col-sm-6');
 		$('#sd').toggleClass('col-sm-6');
-
 	});
+
+
 
 	$('#btnDesc').divButton({
 		type:'link',
@@ -109,4 +96,7 @@
 			$('#desc').toggleClass('d-hidden');
 		}
 	});
+	
+
 </script>
+

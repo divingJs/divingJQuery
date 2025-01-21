@@ -1,0 +1,102 @@
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<div id="cdg"></div>
+				</div>
+				<div class="col-sm-12" id="sd">
+					<div class="row" id="desc">
+						<div class="col-sm-12">
+							<div class="d-article">
+								<div class="d-article-section">
+									<p>Agrega titulos de una manera sencilla</p>
+									<ul style="list-style: none;margin:0;padding:0;">
+										<li>
+											<em style="float:left;">title: </em>
+											<div>String</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-11"></div>
+						<div class="col-sm-1">
+							<div id="btnDesc"></div>
+						</div>
+					</div>
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+<template id="tmp">
+	<div id="window"></div>
+	<script type="text/javascript">
+
+		$('#window').divWindow({
+		    content:'Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia asperiores, consequatur fuga suscipit odio in sunt, eligendi amet. Cumque, fuga similique sunt fugit doloremque nemo aliquam repellat magnam aliquid velit odit nam, esse dolores molestias consequuntur distinctio facilis ut molestiae quis. Enim aliquam nobis autem maiores asperiores quibusdam quisquam, molestias nesciunt, dignissimos repudiandae, repellendus ipsam odio provident voluptatem fuga veniam, ad praesentium temporibus officiis ut dolor nostrum eligendi unde? Aperiam, minus accusantium voluptatem magnam recusandae cumque dolorum suscipit quam maiores ex accusamus nam doloremque reprehenderit omnis blanditiis possimus modi illum. Fugiat suscipit unde accusamus quae eius, tempore eos illum ratione.<br />Libero iste ex consectetur reiciendis, voluptatibus magnam sunt iusto laborum aperiam dolores non, culpa obcaecati tempora. Neque pariatur perspiciatis repellendus totam nihil ipsum vel, eligendi, enim beatae sequi quidem aut velit magnam magni sunt libero sed, quisquam veniam sit. Tenetur nam culpa exercitationem voluptatum iure quasi ea atque veniam ad, libero optio neque velit asperiores, error nihil? Beatae labore, consequuntur nobis perferendis assumenda optio consectetur non fuga, reiciendis id a ullam, rerum reprehenderit accusamus suscipit recusandae quasi? Temporibus harum ipsam illum architecto nam atque molestiae. Aliquam mollitia magnam numquam autem sit consequuntur, dolore! Corrupti nemo laudantium labore illum porro, laborum?<br />Vel, ea quae quo dicta tempora aperiam saepe, voluptate modi quos laboriosam eum veniam perspiciatis ullam pariatur asperiores id magni eligendi explicabo repudiandae iure suscipit cum incidunt minima voluptas optio. Numquam explicabo consequatur accusamus cum deleniti voluptates consectetur ut aliquam maxime voluptatibus dolore sapiente necessitatibus sed molestiae ullam incidunt autem reiciendis fugit ea maiores, dicta odit repellendus a tenetur. Nulla nemo recusandae ipsam officia tenetur, dolorem in magni, distinctio, fugiat architecto minima modi doloremque molestias molestiae non voluptates. Eveniet cumque necessitatibus eum, atque placeat accusamus facilis doloremque a ullam veniam tenetur saepe blanditiis. Sed culpa at qui, vero dolorem iusto.<br />Blanditiis officiis quod ullam sapiente, reprehenderit nam dolore accusantium corporis nostrum, vitae, aut minima earum voluptate animi! Ducimus quo quaerat neque laudantium dolore facilis eveniet nemo tempora repellendus cumque ad impedit error natus, aut quidem rerum voluptatem voluptate ratione tempore quibusdam deserunt perferendis accusamus quis ea culpa? Distinctio tempore, nihil, odit omnis excepturi numquam aliquid ducimus velit? Dicta beatae nam eligendi quidem tenetur hic excepturi fugiat quae alias ex? Modi repellendus culpa sapiente vitae sequi, maiores laudantium fugit voluptas beatae itaque, magni nobis voluptatibus. Corporis iusto officiis molestiae voluptates laudantium incidunt quos eius perferendis, iure quam illo, atque odio impedit.<br />Ab voluptatem optio cupiditate architecto nulla molestiae, assumenda ut, reprehenderit et nostrum veniam sit, necessitatibus natus laudantium quasi vel aliquid atque laboriosam minus incidunt impedit adipisci modi, at facere! Saepe, maxime laborum placeat soluta, vero similique suscipit praesentium aut mollitia quo, rem nisi qui magnam repellendus. Velit, minus nostrum laboriosam est numquam, exercitationem sit. Doloribus quidem commodi nihil fugit sunt quo amet consequuntur magnam perspiciatis, molestiae labore fugiat unde accusantium alias, fuga possimus corrupti quod, ea odit? Provident, velit odit corrupti tenetur vitae dolor. Dolorum quisquam nobis maiores in quibusdam dignissimos accusantium dolorem atque quis! Hic fugit temporibus sed magnam?'
+		    ,scrollable: true
+		});
+	</script>
+
+
+</template>
+<script type="text/javascript">
+	
+	
+	var b = $('#tmp')[0].innerHTML;
+	var edt = $('#cdg').divCoding({
+		prepend:vle,
+		append:'</body>\n</html>',
+		value:b,
+		keys:{
+			"Ctrl-Enter":function(e){
+				var et=$('#cdg').data('divCoding');
+				create('salida',et.value);
+			}
+		}
+	}).data('divCoding');
+	edt.editor.setSize(null,600);
+	create('salida',vle+b+"\n</body>\n</html>");
+
+	
+	$('#btnConfig').click(function(){
+		$(this).toggleClass('icon-navigate_nextchevron_right');
+		$('#menuConfig').toggleClass('d-hidden');
+		$('#salidaCofing').toggleClass('col-sm-12');
+		$('#salidaCofing').toggleClass('col-sm-8');
+		$('#en').toggleClass('col-sm-12');
+		$('#sd').toggleClass('col-sm-12');
+		$('#en').toggleClass('col-sm-6');
+		$('#sd').toggleClass('col-sm-6');
+	});
+
+
+
+	$('#btnDesc').divButton({
+		type:'link',
+		icon:{
+			class:'icon-upload7'
+		},
+		click:function(){
+			var btn = $('#btnDesc').data('divButton');
+			btn.toggleClass('icon-upload7');
+			btn.toggleClass('icon-download8');
+			$('#desc').toggleClass('d-hidden');
+		}
+	});
+	
+
+</script>
+

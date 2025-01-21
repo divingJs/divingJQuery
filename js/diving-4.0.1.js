@@ -52,6 +52,39 @@ const diving = {
         }
     },
     region: 'en-US',
+    asignDate:(vl)=>{
+        /*
+        * asigna una fecha en base a un string que puede ser 
+        * dd/mm/yyyy ó dd/mm/yy
+        */
+        if(vl instanceof Date){
+            return new Date(vl);
+        }else{
+            try{
+                const formatParts = 'dd/mm/yyyy'.split(/[-/.\s]/); // Separar por delimitadores comunes
+                const dateParts = vl.split(/[-/.\s]/);
+                if (formatParts.length !== dateParts.length) {
+                    throw new Error("El formato no coincide con la cadena de fecha proporcionada.");
+                }
+                let day, month, year;
+                formatParts.forEach((part, index) => {
+                    switch (part.toLowerCase()) {
+                        case "dd":day = parseInt(dateParts[index], 10);break;
+                        case "mm":month = parseInt(dateParts[index], 10) - 1;break;
+                        case "yyyy":year = parseInt(dateParts[index], 10);break;
+                        default:throw new Error(`Formato desconocido: ${part}`);
+                    }
+                });
+                if (isNaN(day) || isNaN(month) || isNaN(year)) {
+                    throw new Error("No se pudo parsear la fecha. Revisa la cadena y el formato.");
+                }
+                return new Date(year, month, day);
+            }catch(e){
+                console.log("No se pudo parsear la fecha. Revisa la cadena y el formato.");
+                return null;
+            }
+        }
+    },
     formatDate: (date, format) => {
         if (!(date instanceof Date)) date = new Date(date);
         const day = date.getDate().toString().padStart(2, '0');
@@ -912,6 +945,7 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
             widget.columnas = (prm.columns||gc(prm.dataSource.options.dataItems));
             widget.createElement(prm, widtgetData);
             $(this).data('div' + widget.name, widtgetData);
+            return this;
         },
         createElement: function(p, data) {
             $(data.elem).empty();
@@ -1484,9 +1518,13 @@ class Source {
           this.options.dataItems=data.map(item => {
                const fields = this.options?.schema?.model?.fields||{};
                for (const [key, field] of Object.entries(fields)) {
-                    if (field.type === 'number') item[key] = parseFloat(item[key]);
-                    else if (field.type === 'date') item[key] = new Date(item[key]);
-                    else if (field.type === 'string') item[key] = String(item[key]);
+                    if (field.type === 'number'){
+                        item[key] = parseFloat(item[key]);
+                    }else if (field.type === 'date'){
+                        item[key] = new Date(diving.asignDate(item[key]));
+                    }else if (field.type === 'string'){
+                        item[key] = String(item[key]);
+                    }
                }
                return item;
           });
@@ -1639,7 +1677,7 @@ diving.data.DataSource = Source;
                                              'top:0px;'+
                                              'left:0px;'+
                                              'position:absolute;'+
-                                             'background-color:#04040433;z-index:1;'});
+                                             'background-color:var(--bs-gray-300);z-index:1;'});
                          $('body').append(md);;
                          this.element[0].style['z-index']=2;
                     },
@@ -1662,7 +1700,7 @@ diving.data.DataSource = Source;
                var _ttl = $('<div>', {
                     class: 'd-window-title'
 
-               }).append(p.title || ' - ');
+               }).append(p.title || "&nbsp;");
                if(p.hasOwnProperty('actions')){
                     if(p.actions.indexOf('close')>-1){
                          let _close = $('<em>',{
@@ -1738,7 +1776,7 @@ diving.data.DataSource = Source;
                }
                var _window = $('<div>', { class: (p.class || '') });
                $(data.element).append(_window.append(_ttl).append(_cnt));
-               $(data.element).attr('style','position: absolute;top: 0;left: 0;box-shadow: 1px 1px 3px 2px #dddada;border-radius: 5px;');
+               $(data.element).attr('style','position: absolute;top: 0;left: 0;box-shadow: #1a191940 2px 2px 9px 2px;border-radius: 5px;');
                _ttl[0].cursor="grab";
                _ttl[0].border='solid 1px #d7d7d7';
                 _ttl[0]['border-top-left-radius']='5px';

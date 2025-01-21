@@ -96,15 +96,15 @@
 
 .d-window-content{
     position:relative;
-    border: solid 1px #d7d7d7;
-    background-color: white;
+    border: solid 1px var(--bs-border-color);
+    background-color: var(--bs-body-bg);
 }
 .d-window-ajuste{
     position: relative;
 }
 
 .d-window-title {
-    background-color: #f1f1f1;
+    background-color: var(--bs-light);
     color: black;
     padding: 0.5em;
 }
@@ -117,7 +117,7 @@
     width: 100%;
     height: 100%;
     position: absolute;
-    background-color: #404040b3;
+    background-color: var(--bs-gray-100);
 }
 .d-window-actions {
     position: absolute;
