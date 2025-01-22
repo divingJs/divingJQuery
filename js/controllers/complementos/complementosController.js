@@ -42,7 +42,8 @@ var dts = new diving.data.DataSource({
             ]
         },
         {text:'DataSource',elements:[
-                {text:'Creacion',href:'../../pages/complementos/Config/DataSource.html'}
+                {text:'Data',href:'../../pages/complementos/DataSource/DataSource.html'},
+                {text:'Fields',href:'../../pages/complementos/DataSource/fields.html'}
                 ]
         },
         {text:'Iconos',href:'../../pages/complementos/Config/iconos.html'}
