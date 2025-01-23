@@ -1,3 +1,12 @@
+<!--
+<div class="row">
+	<div class="col-sm-1">
+		<div class="cntConfig">
+			<em class="icon-navigate_beforechevron_left d-config-cntrol" id="btnConfig"></em>
+		</div>
+	</div>
+</div>
+-->
 <div id="cntJS">
 	<div class="d-article">
 		<div class="d-article-section">
@@ -15,12 +24,13 @@
 		var dataSource = new diving.data.DataSource({
 			data:[
 					{name:'John',age:'25',register:new Date()},
-					{name:'Jane',age:'50',register:"25/05/2018"},
+					{name:'Jane',age:'25',register:"25/05/2018"},
 					{name:'Oscar',age:'45',register:new Date(2015,02,17)},
-					{name:'David',age:'15',register:"30/01/2000"},
+					{name:'David',age:'35',register:"30/01/2000"},
 					{name:'Kely',age:'35',register:new Date(208,05,20)},
-					{name:'Britanny',age:'22',register:new Date()}
-			    ]
+					{name:'Britanny',age:'25',register:new Date()}
+			    ],
+			group:[{field:'age'}]
 		});
 		console.log(dataSource)
 	</script>

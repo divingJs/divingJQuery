@@ -42,11 +42,17 @@ var dts = new diving.data.DataSource({
             ]
         },
         {text:'DataSource',elements:[
-                {text:'Data',href:'../../pages/complementos/DataSource/DataSource.html'},
-                {text:'Fields',href:'../../pages/complementos/DataSource/fields.html'}
-                ]
+            {text:'Aggregate',href:'../../pages/complementos/DataSource/aggregate.html'},
+            {text:'Data',href:'../../pages/complementos/DataSource/DataSource.html'},
+            {text:'DataItems',href:'../../pages/complementos/DataSource/dataItems.html'},
+            {text:'Fields',href:'../../pages/complementos/DataSource/fields.html'},
+            {text:'Group',href:'../../pages/complementos/DataSource/group.html'},
+            {text:'Sort',href:'../../pages/complementos/DataSource/sort.html'},
+            {text:'SetData',href:'../../pages/complementos/DataSource/setData.html'},
+            {text:'View',href:'../../pages/complementos/DataSource/view.html'}
+            ]
         },
-        {text:'Iconos',href:'../../pages/complementos/Config/iconos.html'}
+        {text:'Iconos',href:'../../pages/complementos/Config/ikono.html'}
     ]
 });
 

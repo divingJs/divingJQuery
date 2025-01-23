@@ -444,12 +444,13 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                 elemento = $('<input>', attributes);
             }
             $(data.elem).append(elemento);
-            elemento.on('change',function(evt){
+            elemento.on('change',function(k){
                     var t = $($(this).parent()).data('divText');
                     t.text = this.value;
                     if(p.change){
                         p.change.constructor=this.change;
-                        p.change();
+                        p.change(k);
+                        //k.preventDefault();
                     }
                 });
             elemento.on('keyup',function(k){
@@ -459,7 +460,8 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                         t['key']=k.originalEvent.key;
                         if(p.keyup){
                             p.keyup.constructor=this.onkeyup;
-                            p.keyup();
+                            p.keyup(k);
+                            //k.preventDefault();
                         }
                     }
                 });
@@ -470,7 +472,8 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                         t['key']=k.originalEvent.key;
                         if(p.keydown){
                             p.keydown.constructor=this.keydown;
-                            p.keydown();
+                            p.keydown(k);
+                            //k.preventDefault();
                         }
                     }
                 });
@@ -788,7 +791,7 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
                 if(v.hasOwnProperty('checked')){
                     impt[0].checked = true;
                     d.value = $('#'+(i+1)+'_'+v.id)[0].value;
-                    $('#'+(i+1)+'_'+v.id).parent().toggleClass('d-chk-selected');
+                    $('#'+(i+1)+'_'+v.id).parent().toggleClass('d-rb-selected');
                     if(d.icon.hasOwnProperty('checked')){
                         var iconId = $('#'+(i+1)+'_icon_'+v.id);
                         if(iconId.hasClass(d.icon.checked)){
@@ -950,20 +953,21 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
         createElement: function(p, data) {
             $(data.elem).empty();
             this.dataSource = data.dataSource;
-            var width = (p.width != undefined) ? 'width:' + p.width : '';
+            var width = (p.width != undefined) ? 'width:' + diving.addPx(p.width) : '';
             var t = $('<table>', {
                 role:'d-grid',
-                class: 'table table-striped grid-scrollable-table',
-                style: width
+                class: 'table table-bordered table-striped grid-scrollable-table',
+                style: width+';font-size: small;'
             });
             var th = $('<thead>', {
-                class: 'table-light'
+                class: 'table-light',
+                style:(!p.hasOwnProperty('height')?'width:100% !important;':'')
             });
             var tb = $('<tbody>', {
                 class: ''
             });
             if (p.hasOwnProperty('height')) {
-                tb[0].setAttribute('style', 'height: ' + p.height);
+                tb[0].setAttribute('style', 'height: ' + diving.addPx(p.height));
             }
 
             t.append(th);
@@ -1185,7 +1189,7 @@ $('body')[0].setAttribute('style','font-size:'+diving.addPx(diving.fontSize));
 
                 var tdh = $('<th>', {
                     'd-index': widget.rdIndex,
-                    text: element.title||(element.hasOwnProperty('command')?(element.command=='edit'?'EDITAR':'REMOVER'):''),
+                    text: diving.normalizeText(element.title||(element.hasOwnProperty('command')?(element.command=='edit'?'EDITAR':'REMOVER'):'') ),
                     col: colId,
                     field: element.field||''
                     ,width: (element.hasOwnProperty('command')?diving.addPx(100):w)
@@ -1502,16 +1506,23 @@ class Source {
           if (p.group) this.group(p.group);
           if (p.sort) this.sort(p.sort);
           if (p.aggregate) this.aggregate(p.aggregate, this.options);
+          this['view'] = this.view();
           return this;
      }
      aggregate(a, c) {
           const data = c.data?.[0]?.items ? c.data.map(item => item.items) : c.data || c;
           if (!data) return;
           Object.entries(a).forEach(([key, { field }]) => {
-               const total = data.reduce((sum, item) => sum + item[field], 0);
-               data.forEach(item => {
-                    item[`aggregate_${key}`] = key === 'avg' ? item[field] / total : total;
-               });
+                let total = 0;
+                switch(key){
+                    case 'sum':total = data.dataItems.reduce((sum, item) => sum + item[field], 0);                  break;
+                    case 'avg':total = data.dataItems.reduce((sum, item) => sum + item[field], 0);                  break;
+                    case 'min':total = data.dataItems.reduce((min, item) => Math.min(min, item[field]), Infinity);  break;
+                    case 'max':total = data.dataItems.reduce((max, item) => Math.max(max, item[field]), -Infinity); break;
+                }
+                data.dataItems.forEach(item => {
+                    item[`aggregate_${key}`]=key==='avg'?item[field]/total:total;
+                });
           });
      }
      setData(data) {
@@ -1647,246 +1658,244 @@ diving.data.DataSource = Source;
     diving.widget(widget);
 })();
 /*window*/
-(function(){
-     var widget = {
-          name: "Window",
-          init: function(prm) {
-               var widgetData = {
-                    element: $(this),
-                    class: "d-window",
-                    destroy:function(){
-                         $(this.element).removeData('divWindow');
-                         $(this.element).empty();
-                    },
-                    center:function(){
-                         const $element = $(this.element);
-                         const windowWidth = $(window).width();
-                         const windowHeight = screen.height;
-                         const elementWidth = $element.outerWidth();
-                         const elementHeight = $element.outerHeight();
-                         const left = (windowWidth - elementWidth) / 2;
-                         const top = (windowHeight/2) - (elementHeight/2);
-                         $element.css({
-                              top: `${top}px`,
-                              left: `${left}px`
-                         });
-                    },
-                    modal:function(){
-                         var md = $('<div>',{style:'width:'+screen.width+'px;'+
-                                             'height:'+screen.height+'px;'+
-                                             'top:0px;'+
-                                             'left:0px;'+
-                                             'position:absolute;'+
-                                             'background-color:var(--bs-gray-300);z-index:1;'});
-                         $('body').append(md);;
-                         this.element[0].style['z-index']=2;
-                    },
-                    est:{
-                         _mx:false,
-                         _st:{}
-                    }
-               };
-               prm['scrollable']=prm.scrollable||false;
-               widget.createElement(prm, widgetData);
-               $(this).data('div' + widget.name, widgetData);
-               return $(this);
-          },
-          createElement: function(p, data) {
-               $(data.element).empty();
-               var _cnt = $('<div>', {
-                    class: 'd-window-content ' + (data.class || ''),
-                    style: 'overflow:'+(p.scrollable?'scroll':'hidden')+';padding: 0.5em;width:'+diving.addPx(p.width||200)+'; height:'+diving.addPx(p.height||200)
-               }).append(p.content);
-               var _ttl = $('<div>', {
-                    class: 'd-window-title'
-
-               }).append(p.title || "&nbsp;");
-               if(p.hasOwnProperty('actions')){
-                    if(p.actions.indexOf('close')>-1){
-                         let _close = $('<em>',{
-                              class:'icon-clearclose',
-                              style:'padding:0.5em;cursor:pointer;float:right;' 
-                         });
-                         _close.on('click',function(e){
-                              if(p.hasOwnProperty('close')){
-                                   p.constructor.close = this.click;
-                                   p.close();
-                              }else{
-                                   var w = data.element.data('divWindow');
-                                   w.destroy();
-                              }
-                         });
-                         _ttl.append(_close);
-                    }
-                    if(p.actions.indexOf('maximize')>-1){
-                         var maximize = $('<em>',{
-                              class:'icon-window-maximize',
-                              style:'padding:0.5em;cursor:pointer;float:right;',
-                              click:function(){
-                                   var w = $(data.element).data('divWindow');
-                                   var estiloPrevio = w.est._st;
-                                   var activo = w.est._mx;
-                                   if(!activo){
-                                        w.est={
-                                             _mx: true,
-                                             _st:{
-                                                  position: $(data.element)[0].style.position,
-                                                  left: $(data.element)[0].style.left,
-                                                  top: $(data.element)[0].style.top,
-                                                  width: $($(data.element).find('.d-window-content')[0])[0].style.width,
-                                                  height: $($(data.element).find('.d-window-content')[0])[0].style.height,
-                                             }
-                                        };
-                                        $(data.element).css({
-                                             position:'absolute',
-                                             left:'0',
-                                             top:'0',
-                                             width:screen.width,
-                                             height:screen.height,
-                                        });
-                                        
-                                        $($(data.element).find('.d-window-content')).css({
-                                             width: screen.width,
-                                             height: screen.height
-                                        });
-                                   }else{
-                                        w.est._mx=false;
-                                        $(data.element).css({
-                                             position: w.est._st.position,
-                                             left: w.est._st.left,
-                                             top: w.est._st.top,
-                                             width: '',
-                                             height: ''
-                                        });
-                                        $($(data.element).find('.d-window-content')).css({
-                                             width: w.est._st.width,
-                                             height: w.est._st.height
-                                        });
-                                   }
-                              }
-                         });
-                         _ttl.append(
-                              maximize
-                         );
-                    }
-                    if(p.actions.indexOf('minimize')>-1){
-                         var minimize = $('<em>',{class:'icon-minimize1',style:'padding:0.5em;cursor:pointer;float:right;',click:function(){$($(data.element).find('.d-window-content')[0]).toggle('d-hidden');}});
-                         _ttl.append(minimize);
-                    }
-               }
-               var _window = $('<div>', { class: (p.class || '') });
-               $(data.element).append(_window.append(_ttl).append(_cnt));
-               $(data.element).attr('style','position: absolute;top: 0;left: 0;box-shadow: #1a191940 2px 2px 9px 2px;border-radius: 5px;');
-               _ttl[0].cursor="grab";
-               _ttl[0].border='solid 1px #d7d7d7';
-                _ttl[0]['border-top-left-radius']='5px';
-                _ttl[0]['border-top-right-radius']='5px';
-               this.dragger(data.element, _ttl);
-               this.createResizes(data.element,data);
-               if(p.hasOwnProperty('modal')){
-                    data.modal();
-               }
-          },
-          createResizes:function(_w,d){
-               let bb = $('<div>', { 'd-role': _w.attr('id') + '_bb', style: 'cursor:ns-resize;width:' + diving.addPx((_w[0].offsetWidth)) + ';height:0.25em;/*background-color:*/red;position:absolute;bottom:0;' });
-               let br = $('<div>', { 'd-role': _w.attr('id') + '_br', style: 'cursor:ew-resize;width:0.25em;height:' + diving.addPx((_w[0].offsetHeight)) + ';/*background-color:*/red;position:absolute;right:0;top:0;' });
-               let bbr = $('<div>', { 'd-role': _w.attr('id') + '_bbr', style: 'cursor:nwse-resize;width:0.35em;height:0.35em;/*background-color:*/blue;position:absolute;bottom:0;right:0;' });
-               this.addResizeEvent(bb, _w, { direction: 'vertical', side: 'bottom' });
-               this.addResizeEvent(br, _w, { direction: 'horizontal', side: 'right' });
-               this.addResizeEvent(bbr, _w, { direction: 'diagonal', side: 'bottom_right' });
-               _w.append(bb).append(br).append(bbr);
-          },
-          dragger: function(element, handle) {
-               const $draggable = $(element);
-               const $handle = $(handle || element);
-               let isDragging = false;
-               let offsetX = 0, offsetY = 0;
-               $handle.on("mousedown", function(e) {
-                    e.preventDefault();
-                    isDragging = true;
-                    offsetX = e.clientX - $draggable.offset().left;
-                    offsetY = e.clientY - $draggable.offset().top;
-                    handle.css('cursor','grabbing');
-               });
-               $(document).on("mousemove", function(e) {
-                    if (isDragging) {
-                         const x = e.clientX - offsetX;
-                         const y = e.clientY - offsetY;
-                         $draggable.css({
-                              top: y + "px",
-                              left: x + "px"
-                         });
-                    }
-               });
-               $(document).on("mouseup", function() {
-                    if (isDragging) {
-                         isDragging = false;
-                         handle.css("cursor", "grab");
-                    }
-               });
-          },
-          addResizeEvent: function(resizer, element, options) {
-               let isResizing = false;
-               let startWidth, startHeight, startX, startY;
-
-               resizer.on("mousedown", function(e) {
-                    e.preventDefault();
-                    isResizing = true;
-
-                    startWidth = element.width();
-                    startHeight = element.height();
-                    startX = e.clientX;
-                    startY = e.clientY;
-
-                    $(document).on("mousemove.resize", function(e) {
-                         if (isResizing) {
-                              let newWidth = startWidth;
-                              let newHeight = startHeight;
-                              if(options.direction === 'diagonal'){
-                                   switch(options.side){
-                                        case 'bottom_right':
-                                             newHeight = startHeight + (e.clientY - startY);
-                                             newWidth = startWidth + (e.clientX-startX);
-                                             break;
-                                   }
-                              }else if(options.direction === 'vertical'){
-                                   if(options.side==='top'){
-                                        //pendiente
-                                   }else if(options.side==='bottom'){
-                                        newHeight = startHeight + (e.clientY - startY);
-                                   }
-                              }else if(options.direction === 'horizontal'){
-                                   if(options.side === 'right'){
-                                        newWidth = startWidth + (e.clientX-startX);
-                                   }else if(options.side==='left'){
-                                   }
-                              }
-
-                              element.css({
-                                   width: Math.max(newWidth, 100) + "px",
-                                   height: Math.max(newHeight, 100) + "px"
-                              });
-                              $(element.find('.d-window-content')[0]).css({
-                                   width: Math.max(newWidth, 100) + "px",
-                                   height: Math.max(newHeight-40, 100) + "px"
-                              });
-                              $(element.find('div[d-role="'+$(element).attr('id')+'_bl"')[0]).css({height: Math.max(newHeight, 100) + "px"});
-                              $(element.find('div[d-role="'+$(element).attr('id')+'_br"')[0]).css({height: Math.max(newHeight, 100) + "px"});
-                              $(element.find('div[d-role="'+$(element).attr('id')+'_bt"')[0]).css({width: Math.max(newWidth, 100) + "px"});
-                              $(element.find('div[d-role="'+$(element).attr('id')+'_bb"')[0]).css({width: Math.max(newWidth, 100) + "px"});
-                              var _e = $(element).data('divWindow');
-                              _e.est._mx=false;
-                         }
+(function () {
+    const widget = {
+        name: "Window",
+        init: function (prm) {
+            const widgetData = {
+                element: $(this),
+                class: "d-window",
+                destroy: function () {
+                    const $element = $(this.element);
+                    $element[0].style.width = 0;
+                    $element[0].style.height = 0;
+                    $element.removeData("divWindow").empty();
+                },
+                center: function () {
+                    const $element = $(this.element);
+                    const left = (window.innerWidth - $element.outerWidth()) / 2;
+                    let top = (window.innerHeight - $element.outerHeight()) / 2;
+                    top = (top<0)?top*-1:top;
+                    $element.css({ top: `${top}px`, left: `${left}px` });
+                },
+                modal: function () {
+                    const modalOverlay = $('<div>', {
+                        class: 'modal-overlay',
+                        style: `
+                            position: absolute;
+                            top: 0; left: 0;
+                            width: 100vw; height: 100vh;
+                            background-color: rgba(0, 0, 0, 0.3);
+                            z-index: 1;
+                        `,
                     });
+                    $('body').append(modalOverlay);
+                    $(this.element).css('z-index', 2);
+                },
+                est: { _mx: false, _st: {} },
+            };
 
-                    $(document).on("mouseup.resize", function() {
-                         if (isResizing) {
-                              isResizing = false;
-                              $(document).off(".resize");
-                         }
+            prm.scrollable = prm.scrollable || false;
+            widget.createElement(prm, widgetData);
+            $(this).data(`div${widget.name}`, widgetData);
+            return $(this);
+        },
+        createElement: function (p, data) {
+            const $element = $(data.element).empty();
+
+            const content = $('<div>', {
+                class: `d-window-content ${data.class || ""}`,
+                style: `overflow:${p.scrollable ? "scroll" : "hidden"};
+                        padding: 0.5em;
+                        width:${addPx(p.width || 200)};
+                        height:${addPx(p.height || 200)};`,
+            }).append(p.content);
+
+            const titleBar = this.createTitleBar(p, data);
+
+            const container = $('<div>', { class: p.class || "" });
+            $element.append(container.append(titleBar).append(content));
+            $element.css({
+                position: "absolute",
+                top: 0,
+                left: 0,
+                boxShadow: "#1a191940 2px 2px 9px 2px",
+                borderRadius: "5px",
+            });
+
+            this.dragger(data.element, titleBar);
+            this.createResizes(data.element, data);
+            if (p.modal) data.modal();
+        },
+        createTitleBar: function (p, data) {
+            const titleBar = $('<div>', { class: "d-window-title" }).append(p.title || "&nbsp;");
+
+            if (p.actions?.includes("close")) {
+                const closeButton = this.createActionButton("icon-clearclose", "Cerrar", () => {
+                    p.close ? p.close() : data.element.data("divWindow").destroy();
+                });
+                titleBar.append(closeButton);
+            }
+
+            if (p.actions?.includes("maximize")) {
+                const maximizeButton = this.createActionButton("icon-window-maximize", "Maximizar", () => {
+                    const w = data.element.data("divWindow");
+                    if (!w.est._mx) {
+                        w.est = {
+                            _mx: true,
+                            _st: {
+                                position: data.element.css("position"),
+                                left: data.element.css("left"),
+                                top: data.element.css("top"),
+                                width: data.element.css('width'),//.find(".d-window-content").css("width"),
+                                height: data.element.css('height')//.find(".d-window-content").css("height"),
+                            }
+                        };
+                        data.element.css({
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100vw",
+                            height: "100vh",
+                        });
+                        data.element.find(".d-window-content").css({ width: "100%", height: "100%" });
+                    } else {
+                        data.element.css(w.est._st);
+                        data.element.find('.d-window-content')[0].style.height=diving.addPx(parseFloat(w.est._st.height.replace('px',''))-$(data.element.find('.d-window-title')[0])[0].clientHeight);
+                        w.est._mx = false;
+                    }
+                });
+                titleBar.append(maximizeButton);
+            }
+
+            if (p.actions?.includes("minimize")) {
+                const minimizeButton = this.createActionButton("icon-minimize1", "Minimizar", () => {
+                    data.element.find(".d-window-content").toggle();
+                });
+                titleBar.append(minimizeButton);
+            }
+
+            return titleBar;
+        },
+        createActionButton: function (iconClass, title, onClick) {
+            return $('<em>', {
+                class: iconClass,
+                style: "padding:0.5em;cursor:pointer;float:right;",
+                title: title,
+            }).on("click", onClick);
+        },
+        dragger: function (element, handle) {
+            let isDragging = false;
+            let offsetX = 0, offsetY = 0;
+
+            handle.on("mousedown", function (e) {
+                e.preventDefault();
+                isDragging = true;
+                offsetX = e.clientX - element.offset().left;
+                offsetY = e.clientY - element.offset().top;
+                handle.css("cursor", "grabbing");
+            });
+
+            $(document).on("mousemove", function (e) {
+                if (isDragging) {
+                    element.css({
+                        top: `${e.clientY - offsetY}px`,
+                        left: `${e.clientX - offsetX}px`,
                     });
-               });
-          }
-     };
-     diving.widget(widget);
+                }
+            });
+
+            $(document).on("mouseup", function () {
+                if (isDragging) {
+                    isDragging = false;
+                    handle.css("cursor", "grab");
+                }
+            });
+        },
+        createResizes: function (element, data) {
+            const resizers = [
+                { direction: "vertical",   id:element.attr('id') + '_bb', side: "bottom"       ,style:"width:" + diving.addPx((element[0].offsetWidth)) + ";height:0.25em;position:absolute;bottom:0;"},
+                { direction: "horizontal", id:element.attr('id') + '_br', side: "right"        ,style:"height:" + diving.addPx((element[0].offsetHeight)) + ";width:0.25em;position:absolute;right:0;top:0;"},
+                { direction: "diagonal",   id:element.attr('id') + '_bbr',side: "bottom_right" ,style:"width:0.35em;height:0.35em;position:absolute;bottom:0;right:0;"}
+            ];
+            resizers.forEach((config) => {
+                const resizer = $('<div>', {
+                    class: `resizer ${config.side}`,
+                    'd-role':config.id,
+                    style: `cursor:${config.direction==="vertical"?"ns":config.direction==='diagonal'?"nwse":"ew"}-resize;${config.style}`,
+                });
+                this.addResizeEvent(resizer, element, config);
+                element.append(resizer);
+            });
+        },
+        addResizeEvent: function (resizer, element, options) {
+            let isResizing = false;
+            let startWidth, startHeight, startX, startY;
+
+            resizer.on("mousedown", function (e) {
+                e.preventDefault();
+                isResizing = true;
+
+                startWidth = element.width();
+                startHeight = element.height();
+                startX = e.clientX;
+                startY = e.clientY;
+
+                $(document).on("mousemove.resize", function (e) {
+                    if (isResizing) {
+                        let newWidth = startWidth;
+                        let newHeight = startHeight;
+                        if(options.direction === 'diagonal'){
+                           switch(options.side){
+                                case 'bottom_right':
+                                     newHeight = startHeight + (e.clientY - startY);
+                                     newWidth = startWidth + (e.clientX-startX);
+                                     break;
+                           }
+                        }else if(options.direction === 'vertical'){
+                           if(options.side==='top'){
+                                //pendiente
+                           }else if(options.side==='bottom'){
+                                newHeight = startHeight + (e.clientY - startY);
+                           }
+                        }else if(options.direction === 'horizontal'){
+                           if(options.side === 'right'){
+                                newWidth = startWidth + (e.clientX-startX);
+                           }else if(options.side==='left'){
+                           }
+                        }
+
+                        element.css({
+                           width: Math.max(newWidth, 100) + "px",
+                           height: Math.max(newHeight, 100) + "px"
+                        });
+                        $(element.find('.d-window-content')[0]).css({
+                           width: Math.max(newWidth, 100) + "px",
+                           height: Math.max(newHeight-40, 100) + "px"
+                        });
+                        $(element.find('div[d-role="'+element.attr('id')+'_bl"')[0]).css({height: Math.max(newHeight, 100) + "px"});
+                        $(element.find('div[d-role="'+element.attr('id')+'_br"')[0]).css({height: Math.max(newHeight, 100) + "px"});
+                        $(element.find('div[d-role="'+element.attr('id')+'_bb"')[0]).css({width: Math.max(newWidth, 100) + "px"});
+                        var _e = $(element).data('divWindow');
+                        _e.est._mx=false;
+
+                    }
+                });
+
+                $(document).on("mouseup.resize", function () {
+                    if (isResizing) {
+                        isResizing = false;
+                        $(document).off(".resize");
+                    }
+                });
+            });
+        },
+    };
+
+    function addPx(value) {
+        return value + "px";
+    }
+
+    diving.widget(widget);
 })();
+
