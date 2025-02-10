@@ -1,4 +1,4 @@
-var rtn = [
+/*var rtn = [
     {'ID':'1','PRODUCTO':'CAMISETA DEPORTIVA',    'CATEGORIA':'Ropa',        'PRECIO':'25.00', 'STOCK':'35', 'FECHA_INGRESO':'07/15/2023'},
     {'ID':'2','PRODUCTO':'AUDÍFONOS INALÁMBRICOS','CATEGORIA':'Electrónica', 'PRECIO':'49.99', 'STOCK':'20', 'FECHA_INGRESO':'06/10/2023'},
     {'ID':'3','PRODUCTO':'BOTELLA TERMICA',       'CATEGORIA':'Accesorios',  'PRECIO':'15.50', 'STOCK':'50', 'FECHA_INGRESO':'05/22/2023'},
@@ -8,7 +8,7 @@ var rtn = [
     {'ID':'7','PRODUCTO':'RELOJ INTELIGENTE',     'CATEGORIA':'Electrónica', 'PRECIO':'120.00','STOCK':'8',  'FECHA_INGRESO':'08/15/2023'},
     {'ID':'8','PRODUCTO':'BOLÍGRAFO DE LUJO',     'CATEGORIA':'Papelería',   'PRECIO':'3.50',  'STOCK':'100','FECHA_INGRESO':'07/10/2023'},
     {'ID':'9','PRODUCTO':'SUDADERA CON CAPUCHA',  'CATEGORIA':'Ropa',        'PRECIO':'40.00', 'STOCK':'25', 'FECHA_INGRESO':'05/30/2023'}
-    ];
+    ];*/
 
 var iconos=[
     {nombre:'icon-media-eject-outline'},

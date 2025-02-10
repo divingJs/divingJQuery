@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+		<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+		<!-- controles de la ventana -->
+		<link rel="stylesheet" href="../../../css/disenio.css">
+		<script type="text/javascript" src="../../../json/controlTemplates.js"></script>
+
+
+		<!-- libreria -->		
+		<script type="text/javascript" d-role="d-editor-script" src="../../../json/cursor.js"></script>
+		<script type="text/javascript" d-role="d-editor-script" src="../../../js/diving-4.0.1.js"></script>
+		<link rel="stylesheet" href="../../../css/diving-4.0.1.css">
+
+		
+		<link  href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"   integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" 	integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+
+</head>
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-12">
+				
+				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+					<div class="container-fluid">
+						<a class="navbar-brand" href="http://192.168.106.83/diving-4.0.1/index.html">Diving</a>
+						<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+							<span class="navbar-toggler-icon"></span>
+						</button>
+						<div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+							<div class="navbar-nav">
+								<a class="nav-link" href="../index.html">Complementos</a>
+								<a class="nav-link" href="icono.html">Icono</a>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</div>
+		</div>
+	</div>
+	<div id="cntJS">
+		<div class="d-article">
+			<div class="d-article-section">
+				<div class="row">
+					<div class="col-sm-4">
+						<div id="buscar"></div>
+					</div>
+					<div class="col-sm-2">
+						<div id="btnBuscar"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<div id="resultado"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<template id="tmp">
+		<div class="row">
+			<div class="col-sm-4">
+				<div class="d-icono">
+					<em class="icon-close1"></em>
+				</div>
+			</div>
+		</div>
+		<style type="text/css">
+
+			.d-icono{
+				font-size: 3em;
+				width: max-content;
+				padding: 0.5em;
+				border:solid 1px #fafafa;
+				border-radius:3px;
+				color:#4f4f4f;
+			}
+			.d-icono:hover{
+				background-color: #4f4f4f;
+				color:#afafaf;
+			}
+		</style>
+	</template>
+
+	<style type="text/css">
+		.contentIcono:hover{
+	        background-color: #4f4f4f;
+	        color:#afafaf;
+		}
+		.contentIcono{
+
+		    border: solid 1px #fafafa;
+		    padding: 1em;
+		    font-size: 3em;
+		    width: 3em;
+		    float: left;
+			overflow: hidden;
+			cursor: pointer;
+		}
+		.contentIcono:hover > label{
+			display: block !important;
+		    font-size: small;
+		    padding: 0px;
+		    position: relative;
+		    left: -2em;
+		    width: max-content;
+		    height: 0;
+		}
+	</style>
+	<script type="text/javascript">
+
+
+		$('#buscar').divText({
+			placeHolder:'icon-object-ungroup',
+			keyup:function(e){
+				
+				if( e.originalEvent.key == 'Enter' ){
+					var txt = $('#buscar').data('divText');
+					$('#resultado').empty();
+					var ul = $('<ul>',{
+						style:'list-style: none;margin: 0;padding: 0;'
+					});
+					searchAndFill(ul,txt);
+					$('#resultado').append(ul);
+				}
+			}
+		});
+
+		$('#btnBuscar').divButton({
+			text:'Buscar Icono',
+			click:function(){
+				var txt = $('#buscar').data('divText');
+				$('#resultado').empty();
+				var ul = $('<ul>',{
+					style:'list-style: none;margin: 0;padding: 0;'
+				});
+				searchAndFill(ul,txt);
+				$('#resultado').append(ul);
+			}
+		});
+		function searchAndFill(ul, txt){
+			for(var i = 0; i < iconos.length; i++){
+				if(iconos[i].nombre
+					.toUpperCase()
+					.match(
+						new RegExp(txt.text.toUpperCase())
+					)!=null){
+					var li = $('<li>',{
+						class:'contentIcono',
+						field:iconos[i].nombre,
+						id: 'icon_'+(i+1),
+						click:function(){
+							var il = this;
+							seleccionaElemento(il);
+						}
+					}).append(
+						$('<em>',{class:iconos[i].nombre})
+					).append(
+						$('<label>',{
+							'for':'icon_'+(i+1),
+							class:'d-hidden',
+							text:iconos[i].nombre
+						})
+					);
+					ul.append(li);
+				}
+			}
+		}
+		function clearMessage(){
+			var alts = $('div[d-role=alerts]');
+			$.each(alts,function(i,v){
+				$(v).remove();
+			});
+		}
+		function seleccionaElemento(il){
+			var e=$("<input>",{
+				value:$(il).attr("field")
+			});
+			$(il).append(e);
+			e[0].select();
+			e[0].setSelectionRange(0,999999);
+			document.execCommand("copy");
+			e[0].remove();
+			$('body').append(
+				$('<div>',{
+					class:'alert alert-success',
+					role:'alert',
+					'd-role':'alerts',
+					css:{
+						position:'fixed',
+						top:'10px',
+						right:'0px'
+					},
+					text:' ['+$(il).attr('field')+'] COPY TO CLIPBOARD'
+				}).prepend(
+					$('<em>',{class:$(il).attr('field')})
+				).append(
+					$('<button>',{
+						type:"button",
+						class:"btn-close",
+						'data-bs-dismiss':"alert",
+						'aria-label':"Close"
+					})
+				)
+			);
+			setTimeout(function(){
+				clearMessage();
+			},1500);
+		}
+	</script>
+
+	
+</body>
+</html>

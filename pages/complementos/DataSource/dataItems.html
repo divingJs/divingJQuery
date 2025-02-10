@@ -1,0 +1,52 @@
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-12" id="en">
+					<textarea type="text" id="codigo"></textarea>
+				</div>
+				<div class="col-sm-12" id="sd"><div id="cntSalida" class="cntSalida d-hidden"></div></div>
+			</div>
+		</div>
+	</div>
+</div>
+<template id="tmp">
+	<script type="text/javascript">
+		var dataSource = new diving.data.DataSource({
+			data:[
+					{name:'John',age:'25',register:new Date()},
+					{name:'Jane',age:'50',register:"25/05/2018"},
+					{name:'Oscar',age:'45',register:new Date(2015,02,17)},
+					{name:'David',age:'15',register:"30/01/2000"},
+					{name:'Kely',age:'35',register:new Date(208,05,20)},
+					{name:'Britanny',age:'22',register:new Date()}
+			    ]
+		});
+		console.log(dataSource.options.dataItems);
+	</script>
+
+
+</template>
+<script type="text/javascript">
+	var area = document.getElementById("codigo");
+	var b = $('#tmp')[0].innerHTML;
+	area.value=vle2+b+"\n</body>\n</html>";
+	var opj={
+		value : vle2+b+"\n</body>\n</html>"
+	};
+	var editor = CodeMirror.fromTextArea(area, {
+	mode: myModeSpec,
+	selectionPointer: true,
+	lineNumbers: true,
+	extraKeys: {
+		"Ctrl-Enter":function(e){
+			create_2('salida',opj.value,'cntSalida');
+		}
+	}
+	});
+	editor.on('change',function(e){
+		opj.value = editor.getValue();
+	});
+	create_2('salida',vle2+b+"\n</body>\n</html>",'cntSalida');
+	editor.setSize(null,600);
+</script>

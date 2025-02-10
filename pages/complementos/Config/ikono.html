@@ -1,0 +1,191 @@
+<div id="cntJS">
+	<div class="d-article">
+		<div class="d-article-section">
+			<div class="row">
+				<div class="col-sm-4" id="en">
+					<textarea type="text" id="codigo">
+					</textarea>
+				</div>
+				<div class="col-sm-8" id="sd">
+					<div id="cntSalida" class="cntSalida"></div>
+				</div>	
+			</div>
+		</div>
+	</div>
+</div>
+
+<template id="tmp">
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="d-icono">
+				<em class="icon-close1"></em>
+			</div>
+		</div>
+	</div>
+	<style type="text/css">
+
+		.d-icono{
+			font-size: 3em;
+			width: max-content;
+			padding: 0.5em;
+			border:solid 1px #fafafa;
+			border-radius:3px;
+			color:#4f4f4f;
+		}
+		.d-icono:hover{
+			background-color: #4f4f4f;
+			color:#afafaf;
+		}
+	</style>
+</template>
+
+<style type="text/css">
+	.contentIcono:hover{
+        background-color: #4f4f4f;
+        color:#afafaf;
+	}
+	.contentIcono{
+
+	    border: solid 1px #fafafa;
+	    padding: 1em;
+	    font-size: 3em;
+	    width: 3em;
+	    float: left;
+		overflow: hidden;
+		cursor: pointer;
+	}
+	.contentIcono:hover > label{
+		display: block !important;
+	    font-size: small;
+	    padding: 0px;
+	    position: relative;
+	    left: -2em;
+	    width: max-content;
+	    height: 0;
+	}
+</style>
+<script type="text/javascript">
+
+
+
+	var area = document.getElementById("codigo");
+	var b = $('#tmp')[0].innerHTML;
+	area.value=vle2+b+"\n</body>\n</html>";
+	var opj={
+		value : vle2+b+"\n</body>\n</html>"
+	};
+	var editor = CodeMirror.fromTextArea(area, {
+		mode: myModeSpec,
+		selectionPointer: true,
+		lineNumbers: true,
+		extraKeys: {
+			"Ctrl-Enter":function(e){
+				create('salida',opj.value);
+			}
+		}
+	});
+	editor.on('change',function(e){
+		opj.value = editor.getValue();
+	});
+	create('salida',vle2+b+"\n</body>\n</html>");
+	editor.setSize(null,600);
+
+
+/*
+	$('#buscar').divText({
+		placeHolder:'icon-object-ungroup',
+		keydown:function(e){
+			if( e.originalEvent.key == 'Enter' ){
+				var txt = $('#buscar').data('divText');
+				$('#resultado').empty();
+				var ul = $('<ul>',{
+					style:'list-style: none;margin: 0;padding: 0;'
+				});
+				searchAndFill(ul,txt);
+				$('#resultado').append(ul);
+			}
+		}
+	});
+
+	$('#btnBuscar').divButton({
+		text:'Buscar Icono',
+		click:function(){
+			var txt = $('#buscar').data('divText');
+			$('#resultado').empty();
+			var ul = $('<ul>',{
+				style:'list-style: none;margin: 0;padding: 0;'
+			});
+			searchAndFill(ul,txt);
+			$('#resultado').append(ul);
+		}
+	});
+	function searchAndFill(ul, txt){
+		for(var i = 0; i < iconos.length; i++){
+			if(iconos[i].nombre
+				.toUpperCase()
+				.match(
+					new RegExp(txt.text.toUpperCase())
+				)!=null){
+				var li = $('<li>',{
+					class:'contentIcono',
+					field:iconos[i].nombre,
+					id: 'icon_'+(i+1),
+					click:function(){
+						var il = this;
+						seleccionaElemento(il);
+					}
+				}).append(
+					$('<em>',{class:iconos[i].nombre})
+				).append(
+					$('<label>',{
+						'for':'icon_'+(i+1),
+						class:'d-hidden',
+						text:iconos[i].nombre
+					})
+				);
+				ul.append(li);
+			}
+		}
+	}
+	function clearMessage(){
+		var alts = $('div[d-role=alerts]');
+		$.each(alts,function(i,v){
+			$(v).remove();
+		});
+	}
+	function seleccionaElemento(il){
+		var e=$("<input>",{
+			value:$(il).attr("field")
+		});
+		$(il).append(e);
+		e[0].select();
+		e[0].setSelectionRange(0,999999);
+		document.execCommand("copy");
+		e[0].remove();
+		$('body').append(
+			$('<div>',{
+				class:'alert alert-success',
+				role:'alert',
+				'd-role':'alerts',
+				css:{
+					position:'fixed',
+					top:'10px',
+					right:'0px'
+				},
+				text:' ['+$(il).attr('field')+'] COPY TO CLIPBOARD'
+			}).prepend(
+				$('<em>',{class:$(il).attr('field')})
+			).append(
+				$('<button>',{
+					type:"button",
+					class:"btn-close",
+					'data-bs-dismiss':"alert",
+					'aria-label':"Close"
+				})
+			)
+		);
+		setTimeout(function(){
+			clearMessage();
+		},1500);
+	}*/
+</script>
